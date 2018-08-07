@@ -1,9 +1,15 @@
+<style scoped>
+    .menu{
+        height: calc(100vh - 64px);
+    }
+</style>
+
 <template>
-    <Menu :theme="theme" active-name="1-1" :open-names="['1']">
+    <Menu class="menu" v-bind="options">
         <Submenu 
-            v-for="item in menu"
+            v-for="item in data"
             :key="item.key"
-            :name="1"
+            :name="item.key"
         >
             <template slot="title">
                 <Icon type="item.icon" />
@@ -19,22 +25,35 @@
         </Submenu>
     </Menu>
 </template>
-<script>
-    export default {
-        data() {
+<script lang="ts">
+    import { Component, Prop, Vue } from 'vue-property-decorator';
+
+    interface Options {
+        theme: string;
+        width: string;
+    }
+    interface GenaralSubMenuItems {
+        name: string;
+        key: string;
+    }
+    interface GenaralMenuItems {
+        name: string;
+        icon: string;
+        key: string;
+        children?: GenaralSubMenuItems;
+    }
+    
+    @Component
+    class AMMenu extends Vue {
+        @Prop({ default() {
             return {
-                theme: 'dark',
-                menu: [{
-                    name: '文件处理',
-                    key: 'fileOpera',
-                    icon: 'ios-filing',
-                    children: [{
-                        name: '存储空间',
-                        key: 'storeSpace',
-                    }],
-                }],
+                theme: 'light',
+                width: 'auto',
             };
-        },
-    };
+        }}) public options!: Options;
+        @Prop() public data !: GenaralMenuItems[];
+    }
+    export default AMMenu;
 </script>
+
 

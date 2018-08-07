@@ -1,16 +1,17 @@
 <template>
-    <div>
-        <AMHeader msg="hello" :menu="menu" />
-    </div>
+    <AMHeader :menu="menu" />
 </template>
 <script lang="ts">
     import { Component, Prop, Vue } from 'vue-property-decorator';
-    import AMHeader from '@/components/Header.vue';
+    import { AMHeader } from '@/components';
 
     @Component({
         components: { AMHeader },
     })
     class Header extends Vue {
+        // public options = {
+        //     activeName: 'loginOut'
+        // }
         public menu = [{
             name: '个人中心',
             icon: 'md-person',

@@ -1,21 +1,26 @@
 <template>
   <div class="home">
-    <!-- <img src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/> -->
-    <Header />
+    <Layout>
+      <Header />
+    </Layout>
+    <Layout>
+      <Sider>
+        <LeftMenu />
+      </Sider>
+      <layout :style="{padding: '0 24px 24px'}">
+        <AMMain />
+      </layout>
+    </Layout>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
-import Header from '@/containers/Header.vue';
+import { Header, LeftMenu } from '@/containers';
+import { AMMain } from '@/components';
 
 @Component({
-  components: {
-    HelloWorld,
-    Header,
-  },
+  components: { Header, LeftMenu, AMMain },
 })
 export default class Home extends Vue {}
 </script>

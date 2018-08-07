@@ -7,14 +7,12 @@
         overflow: hidden;
     }
     .nav{
-        width: 420px;
-        margin: 0 auto;
-        margin-right: 20px;
+        float: right;
     }
 </style>
 <template>
     <Header>
-        <Menu mode="horizontal" theme="dark" active-name="1">
+        <Menu v-bind="options">
             <div class="nav">
                 <MenuItem
                     v-for="item in menu"
@@ -37,10 +35,22 @@
         key: string;
     }
     
+    interface MenuOption {
+        mode: string;
+        theme: string;
+        activeName: string;
+    }
+
     @Component
     class AMHeader extends Vue {
         @Prop() public menu!: GenaralMenuItems[];
-        private data = this.menu;
+        @Prop({ default() {
+            return {
+                theme: 'dark',
+                mode: 'horizontal',
+            };
+        }}) public options!: MenuOption;
+        // private data = this.menu;
     }
     export default AMHeader;
 </script>
