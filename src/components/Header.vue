@@ -34,7 +34,7 @@
         icon: string;
         key: string;
     }
-    
+
     interface MenuOption {
         mode: string;
         theme: string;

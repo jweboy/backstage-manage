@@ -15,13 +15,16 @@
                 <Icon type="item.icon" />
                 {{item.name}}
             </template>
-            <MenuItem 
+            <router-link 
                 v-for="child in item.children"
                 :key="child.key"
-                :name="1"
+                :name="child.key"
+                :to="child.link"
             >
-                <span>{{child.name}}</span>
-            </MenuItem>
+                <MenuItem :name="child.key">
+                    <span>{{child.name}}</span>
+                </MenuItem>
+            </router-link>
         </Submenu>
     </Menu>
 </template>
@@ -41,8 +44,9 @@
         icon: string;
         key: string;
         children?: GenaralSubMenuItems;
+        link: string;
     }
-    
+
     @Component
     class AMMenu extends Vue {
         @Prop({ default() {
