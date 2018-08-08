@@ -15,7 +15,8 @@
             icon: 'ios-filing',
             children: [{
                 name: '存储空间',
-                key: 'storeSpace',
+                key: 'storage',
+                link: '/file/storage',
             }],
         }];
     }

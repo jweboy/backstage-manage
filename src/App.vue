@@ -1,19 +1,15 @@
 <template>
   <div id="app">
-    <!-- <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div> -->
-    <router-view/>
+    <Home />
   </div>
 </template>
 <script lang="ts">
   import Vue from 'vue';
   import Component from 'vue-class-component';
-  import About from './views/About.vue';
+  import Home from './views/Home.vue';
 
   @Component({
-    components: { About },
+    components: { Home },
   })
   class App extends Vue {}
   export default App;
