@@ -1,5 +1,5 @@
 <template>
-    <Table :loading="loading" :data="data" :total="total" :columns="columns" :onChange="onChange"/>
+    <Table :loading="loading" :data="data" :total="total" :columns="columns" :onChange="onChange" />
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
@@ -19,6 +19,8 @@ class AsyncTable extends Vue {
     private loading: boolean = false;
     private data = [];
     private total = 0;
+    // TODO: 这里需要个类型定义 对应data
+    private store = new Map();
     @Prop({
         default: { uri: '/' },
         type: Object,
@@ -41,18 +43,24 @@ class AsyncTable extends Vue {
         fetch(`${BASEURL}${uri}?${url.format(query)}`)
             .then((result) => result.json())
             .then(({ data }) => {
+                const result = data.list.slice();
+                this.store.set(page, result);
                 // hide loading
                 this.timer = setTimeout(() => {
                     this.loading = false;
                 }, 300);
 
                 // set table
-                this.data = data.list.slice();
+                this.data = result;
                 this.total = data.total;
             });
     }
     private onChange(index: number): void {
-        this.asyncGetTableData(index);
+        if (this.store.has(index)) {
+            this.data =  this.store.get(index);
+        } else {
+            this.asyncGetTableData(index);
+        }
     }
 }
 export default AsyncTable;
