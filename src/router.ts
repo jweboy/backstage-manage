@@ -1,8 +1,9 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import iView from 'iview';
+import Home from './views/Home.vue';
 import Main from './views/Main.vue';
-import FileStorage from './views/FileStorage.vue';
+import Bucket from './views/Bucket.vue';
 
 Vue.use(Router);
 
@@ -12,13 +13,13 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'main',
-      component: Main,
-    },
-    {
-      path: '/file/storage',
-      name: 'file-storage',
-      component: FileStorage,
+      name: 'home',
+      component: Home,
+      children: [{
+        path: 'bucket',
+        name: 'bucket',
+        component: Bucket,
+      }],
     },
     // {
     //   path: '/file/storage',

@@ -1,6 +1,7 @@
 <style scoped>
   .main{
     padding: 0 24px 24px;
+    height: calc(100vh - 64px);
   }
 </style>
 <template>
@@ -28,7 +29,5 @@
   @Component({
     components: { Header, LeftMenu, AMMain },
   })
-  export default class Home extends Vue {
-    // public breadcrumbData = []
-  }
+  export default class Home extends Vue {}
 </script>

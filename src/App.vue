@@ -1,20 +1,8 @@
 <template>
   <div id="app">
-    <Home />
+    <router-view />
   </div>
 </template>
-<script lang="ts">
-  import Vue from 'vue';
-  import Component from 'vue-class-component';
-  import Home from './views/Home.vue';
-
-  @Component({
-    components: { Home },
-  })
-  class App extends Vue {}
-  export default App;
-</script>
-
 <style lang="scss">
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
