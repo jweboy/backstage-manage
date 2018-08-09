@@ -6,7 +6,7 @@
 
 <template>
     <div class="table">
-        <Table border :columns="columns" :data="data" :loading="loading" />
+        <Table border :columns="columns" :data="data" :loading="loading" :height="520"/>
         <div class="page">
             <Page :showTotal="showTotal" :total="total" :pageSize="pageSize" @on-change="onChange" />
         </div>
@@ -27,7 +27,6 @@
         @Prop({ default: [], type: Array }) private data !: [any];
         @Prop({ default: false, type: Boolean }) private loading!: boolean;
         @Prop({ default: 0, type: Number }) private total!: number;
-        // private store: Map<number, string> = new Map();
     }
     export default AMTable;
 </script>

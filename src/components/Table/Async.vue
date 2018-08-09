@@ -44,7 +44,9 @@ class AsyncTable extends Vue {
             .then((result) => result.json())
             .then(({ data }) => {
                 const result = data.list.slice();
+                // store local data
                 this.store.set(page, result);
+
                 // hide loading
                 this.timer = setTimeout(() => {
                     this.loading = false;

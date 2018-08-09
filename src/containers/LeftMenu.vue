@@ -14,8 +14,8 @@
             key: 'fileOpera',
             icon: 'ios-filing',
             children: [{
-                name: '存储空间',
-                key: 'storage',
+                name: 'bucket',
+                key: 'bucket',
                 link: '/bucket',
             }],
         }];

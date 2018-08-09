@@ -29,7 +29,5 @@
   @Component({
     components: { Header, LeftMenu, AMMain },
   })
-  export default class Home extends Vue {
-    // public breadcrumbData = []
-  }
+  export default class Home extends Vue {}
 </script>
