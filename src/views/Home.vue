@@ -1,6 +1,7 @@
 <style scoped>
   .main{
     padding: 0 24px 24px;
+    height: calc(100vh - 64px);
   }
 </style>
 <template>

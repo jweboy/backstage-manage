@@ -16,7 +16,7 @@
             children: [{
                 name: '存储空间',
                 key: 'storage',
-                link: '/file/storage',
+                link: '/bucket',
             }],
         }];
     }

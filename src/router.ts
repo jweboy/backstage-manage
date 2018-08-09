@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import iView from 'iview';
 import Main from './views/Main.vue';
-import FileStorage from './views/FileStorage.vue';
+import Bucket from './views/Bucket.vue';
 
 Vue.use(Router);
 
@@ -16,9 +16,9 @@ const router = new Router({
       component: Main,
     },
     {
-      path: '/file/storage',
-      name: 'file-storage',
-      component: FileStorage,
+      path: '/bucket',
+      name: 'bucket',
+      component: Bucket,
     },
     // {
     //   path: '/file/storage',

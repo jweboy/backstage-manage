@@ -1,6 +1,4 @@
-interface Query {
-    [key: string]: string;
-}
+import { Query } from '../contants/request';
 
 export const format = (query: Query): string => {
     let str: string = '';

@@ -28,7 +28,6 @@
         private index: number = 1;
         private reqOpts = {
             uri: '/bucket-list',
-            query: { page: 1 },
         };
         private mounted() {
             // this.asyncGetTableData();

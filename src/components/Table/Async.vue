@@ -1,17 +1,19 @@
 <template>
-    <Table :loading="loading" :data="data" :total="total" :columns="columns"/>
+    <Table :loading="loading" :data="data" :total="total" :columns="columns" :onChange="onChange"/>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { clearTimeout, setTimeout } from 'timers';
+import Table from './Table.vue';
 import { url } from '../../util';
-import { RequestOptions } from '../../contants/request';
+import { Query, RequestOptions } from '../../contants/request';
 import { ColumnItems } from '../../contants/table';
 
 // TODO: fetch需要封装
 const BASEURL = 'https://easy-mock.com/mock/5b6abb11f594902f063a3b93/vue';
 
-@Component
+@Component({
+    components: { Table },
+})
 class AsyncTable extends Vue {
     private timer: any = null;
     private loading: boolean = false;
@@ -30,7 +32,8 @@ class AsyncTable extends Vue {
         this.timer = null;
     }
     private asyncGetTableData(page: number = 1) {
-        const { uri, query } = this.reqOpts;
+        const { uri } = this.reqOpts;
+        const query: Query = { page };
         // show loading
         this.loading = true;
 
@@ -47,6 +50,9 @@ class AsyncTable extends Vue {
                 this.data = data.list.slice();
                 this.total = data.total;
             });
+    }
+    private onChange(index: number): void {
+        this.asyncGetTableData(index);
     }
 }
 export default AsyncTable;

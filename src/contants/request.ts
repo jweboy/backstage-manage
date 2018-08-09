@@ -1,5 +1,5 @@
 export interface Query {
-    [key: string]: string;
+    [key: string]: string | number;
 }
 
 export interface RequestOptions {
