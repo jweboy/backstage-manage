@@ -1,41 +1,63 @@
+<style scoped>
+    .header{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+    .card{
+        margin-bottom: 15px;
+    }
+    .content{
+        text-align: center;
+    }
+    .logo{
+        width: 160px;
+        height: 160px;
+    }
+</style>
+
+
 <template>
-    <div class="bucket">
+    <!-- <div class="bucket">
         <AsyncTable :reqOpts="reqOpts" :columns="tableColumns" />
+    </div> -->
+    <div>
+        <header class="header">
+            <h2>存储空间列表</h2>
+            <Button type="primary">上传文件</Button>
+        </header>
+        <Row :gutter="16">
+            <Col v-for="item in list" span="6">
+                <Card :borered="false" class="card">
+                    <p slot="title">{{item}}</p>
+                    <div class="content">
+                        <img src="../assets/logo.png" class="logo" />
+                    </div>
+                </Card>
+            </Col>
+        </Row>
     </div>
 </template>
-<script lang="ts">
-    import { Component, Prop, Vue } from 'vue-property-decorator';
-    import { AsyncTable } from '@/components';
+<script>
+    import axios from 'axios'
 
-    @Component({
-        components: { AsyncTable },
-    })
-    class Bucket extends Vue {
-        private tableColumns = [{
-            title: '用户名',
-            key: 'name',
-        }, {
-            title: '类型',
-            key: 'type',
-            width: 100,
-        }, {
-            title: '操作',
-            key: 'action',
-            width: 150,
-            align: 'center',
-            render: (h: (name: string, options: object, text: string) => void) => {
-                return h('Button', {
-                    props: {
-                        type: 'error',
-                        size: 'small',
-                    },
-                }, '删除');
-            },
-        }];
-        private reqOpts = {
-            uri: '/bucket-list',
-        };
+    export default {
+        data() {
+            return {
+                list: []
+            }
+        },
+        methods: {
+            asyncGetBucketList() {
+                return axios.get('http://118.24.155.105:4000/v1/qiniu/bucket')
+                    .then(({ data }) => data.data)
+            }
+        },
+        async mounted() {
+            this.list = await this.asyncGetBucketList()
+            console.warn(this.list);
+        }
     }
-    export default Bucket;
 </script>
 
