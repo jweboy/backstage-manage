@@ -6,7 +6,7 @@
 
 <template>
     <Menu class="menu" v-bind="options">
-        <Submenu 
+        <MenuItem 
             v-for="item in data"
             :key="item.key"
             :name="item.key"
@@ -25,11 +25,12 @@
                     <span>{{child.name}}</span>
                 </MenuItem>
             </router-link>
-        </Submenu>
+        </MenuItem>
     </Menu>
 </template>
 <script lang="ts">
     import { Component, Prop, Vue } from 'vue-property-decorator';
+import LeftMenu from '@/containers/LeftMenu.vue';
 
     interface Options {
         theme: string;
@@ -57,7 +58,7 @@
         }}) public options!: Options;
         @Prop() public data !: GenaralMenuItems[];
     }
-    export default AMMenu;
+    export default LeftMenu;
 </script>
 
 
