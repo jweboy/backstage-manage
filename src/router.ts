@@ -15,11 +15,18 @@ const router = new Router({
       path: '/',
       name: 'home',
       component: Home,
-      children: [{
-        path: 'bucket',
-        name: 'bucket',
-        component: Bucket,
-      }],
+      children: [
+        {
+          path: 'file',
+          name: 'file',
+          component: () => import(/* webpackChunkName: "storage" */ './views/Bucket.vue'),
+        },
+        {
+          path: 'test',
+          name: 'test',
+          component: () => import(/* webpackChunkName: "storage" */ './views/About.vue'),
+        },
+      ],
     },
     // {
     //   path: '/file/storage',
