@@ -45,26 +45,36 @@
 <script>
     import axios from 'axios'
     import { LeftMenu } from '@/components'
+    import { mapState, mapActions, mapGetters } from 'vuex';
 
     export default {
-        data() {
-            return {
-                // 镜像空间列表
-                list: []
-            }
-        },
         components:{
             LeftMenu,
         },
         methods: {
-            asyncGetBucketList() {
-                return axios.get('http://118.24.155.105:4000/v1/qiniu/bucket')
-                    .then(({ data }) => data.data)
-            }
+            ...mapActions(['asyncFetchList'])
         },
-        async mounted() {
-            this.list = await this.asyncGetBucketList()
+        computed: {
+            ...mapState({
+                list: state => state.list
+            }),
+            ...mapGetters(['bucketList'])
         }
+        // data() {
+        //     return {
+        //         // 镜像空间列表
+        //         list: []
+        //     }
+        // },
+        // methods: {
+        //     asyncGetBucketList() {
+        //         return axios.get('http://118.24.155.105:4000/v1/qiniu/bucket')
+        //             .then(({ data }) => data.data)
+        //     }
+        // },
+        // async mounted() {
+        //     this.list = await this.asyncGetBucketList()
+        // }
     }
 </script>
 

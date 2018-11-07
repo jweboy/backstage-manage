@@ -1,9 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import iView from 'iview';
-import Home from './views/Home.vue';
-import Main from './views/Main.vue';
-import Bucket from './views/Bucket.vue';
 
 Vue.use(Router);
 
@@ -14,17 +11,18 @@ const router = new Router({
     {
       path: '/',
       name: 'home',
-      component: Home,
+      component: () => import(/* webpackChunkName: "home" */ './views/Home.vue'),
+      redirect: '/file', // 默认展示文件列表页面
       children: [
         {
           path: 'file',
           name: 'file',
-          component: () => import(/* webpackChunkName: "storage" */ './views/Bucket.vue'),
+          component: () => import(/* webpackChunkName: "bucket" */ './views/Bucket.vue'),
         },
         {
           path: 'test',
           name: 'test',
-          component: () => import(/* webpackChunkName: "storage" */ './views/About.vue'),
+          component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
         },
       ],
     },
