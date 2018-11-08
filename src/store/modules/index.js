@@ -1,0 +1,1 @@
+export { bucket } from "./bucket";

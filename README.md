@@ -1,32 +1,48 @@
-# vue-backstage
+# backstage-manage
 
 ## Project setup
 ```
-npm install
+yarn install
 ```
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+yarn run serve
 ```
 
 ### Compiles and minifies for production
 ```
-npm run build
+yarn run build
+```
+
+### Run your tests
+```
+yarn run test
 ```
 
 ### Lints and fixes files
 ```
-npm run lint
+yarn run lint
 ```
 
 ### Run your unit tests
 ```
-npm run test:unit
+yarn run test:unit
 ```
 
-### Run your end-to-end tests
-```
-npm run test:e2e
-```
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
 
+"gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "vue-cli-service lint",
+      "git add"
+    ],
+    "*.vue": [
+      "vue-cli-service lint",
+      "git add"
+    ]
+  }
