@@ -1,14 +1,13 @@
-import actions from '../actions/bucket';
-import gutters from '../gutters/bucket';
-import mutations from '../mutations/bucket';
+import actions from "../actions/bucket";
+import gutters from "../gutters/bucket";
+import mutations from "../mutations/bucket";
 
 export const bucket = {
   state: {
     isFetching: false,
-    data: [],
+    data: []
   },
   actions,
   gutters,
-  mutations,
+  mutations
 };
-

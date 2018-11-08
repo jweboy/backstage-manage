@@ -1,2 +1,1 @@
-export { bucket } from './bucket';
-
+export { bucket } from "./bucket";
