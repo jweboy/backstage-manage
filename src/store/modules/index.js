@@ -1,1 +1,5 @@
-export { bucket } from "./bucket";
+import { bucket } from "./bucket";
+
+export default {
+  bucket
+}

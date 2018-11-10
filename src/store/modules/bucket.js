@@ -5,7 +5,7 @@ import mutations from "../mutations/bucket";
 export const bucket = {
   state: {
     isFetching: false,
-    data: []
+    data: [],
   },
   actions,
   gutters,

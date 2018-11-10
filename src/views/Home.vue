@@ -23,22 +23,22 @@
     <Layout>
       <Sider> <LeftMenu /> </Sider>
       <Layout class="main">
-        <header class="layout-header" :menu="menu">
-          <menu mode="horizontal" active-name="user">
+        <Header class="layout-header" :menu="menu">
+          <Menu mode="horizontal" active-name="user">
             <div class="layout-nav">
-              <menuitem v-for="item in menu" name="item.key" :key="item.key">
+              <MenuItem v-for="item in menu" name="item.key" :key="item.key">
                 <Icon type="item.icon" /> <span>{{ item.name }}</span>
-              </menuitem>
+              </MenuItem>
             </div>
-          </menu>
-        </header>
-        <main class="layout-main">
+          </Menu>
+        </Header>
+        <Main class="layout-main">
           <Breadcrumb class="breadcrumb">
             <BreadcrumbItem>home</BreadcrumbItem>
             <BreadcrumbItem>home2</BreadcrumbItem>
           </Breadcrumb>
           <router-view />
-        </main>
+        </Main>
       </Layout>
     </Layout>
   </div>

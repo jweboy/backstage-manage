@@ -46,3 +46,17 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
       "git add"
     ]
   }
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "@vue/prettier"
+    ],
+    "rules": {},
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },

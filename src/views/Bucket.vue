@@ -26,7 +26,7 @@
     <header class="header">
       <h2>存储空间列表</h2>
       <Upload action="http://118.24.155.105:4000/v1/qiniu/file/erer">
-        <button icon="ios-cloud-upload-outline" type="primary">上传文件</button>
+        <Button icon="ios-cloud-upload-outline" type="primary">上传文件</Button>
       </Upload>
     </header>
     <Row :gutter="16">
@@ -50,18 +50,15 @@ export default {
   components: {
     LeftMenu
   },
-  methods: {
-    ...mapActions(["asyncFetchList"])
-  },
-  computed: {
-    ...mapState({
-      list: state => state.list
-    }),
-    ...mapGetters(["bucketList"])
-  },
-  mounted() {}
-  // async mounted() {
-  //     this.list = await this.asyncGetBucketList()
-  // }
+  methods: mapActions(["asyncFetchList"]),
+  // TODO: mapState和mapGetters的区别
+  // ...mapGetters(["getData"]),
+  computed: mapState({
+    list: state => state.bucket.data,
+  }),
+  mounted() {
+    // 获取镜像空间列表
+    this.asyncFetchList()
+  }
 };
 </script>

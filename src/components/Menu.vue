@@ -7,16 +7,16 @@
 }
 </style>
 <template>
-  <menu class="menu" width="auto" theme="dark" active-name="file">
-    <menuitem
+  <Menu class="menu" width="auto" theme="dark" active-name="file">
+    <MenuItem
       v-for="item in menu"
       :name="item.key"
       :to="item.link"
       :key="item.key"
     >
       <Icon :type="item.icon" /> <span class="title">{{ item.title }}</span>
-    </menuitem>
-  </menu>
+    </MenuItem>
+  </Menu>
 </template>
 <script>
 export default {
