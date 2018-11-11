@@ -6,6 +6,7 @@ export const bucket = {
   state: {
     isFetching: false,
     data: [],
+    name: '',
   },
   actions,
   gutters,

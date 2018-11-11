@@ -1,4 +1,6 @@
 import { FETCH_REQUEST, FETCH_SUCCESS, FETCH_FAILURE } from "../contants/types";
+import router from '../../router';
+import VueRouter from "vue-router";
 
 export default {
   [FETCH_REQUEST](state, action) {
@@ -12,5 +14,13 @@ export default {
   [FETCH_FAILURE](state, action) {
     state.isFetching = false;
     state.error = action.error;
+  },
+  onClick(state, action) {
+    const { name } = action;
+    state.name = name;
+    router.push(`/file/${name}`)
+  },
+  goBack() {
+    router.go(-1);
   }
 };

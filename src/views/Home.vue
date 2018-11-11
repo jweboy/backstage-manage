@@ -33,10 +33,10 @@
           </Menu>
         </Header>
         <Main class="layout-main">
-          <Breadcrumb class="breadcrumb">
+          <!-- <Breadcrumb class="breadcrumb">
             <BreadcrumbItem>home</BreadcrumbItem>
             <BreadcrumbItem>home2</BreadcrumbItem>
-          </Breadcrumb>
+          </Breadcrumb> -->
           <router-view />
         </Main>
       </Layout>
