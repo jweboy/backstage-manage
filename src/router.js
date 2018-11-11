@@ -30,8 +30,14 @@ const router = new Router({
           name: "test",
           component: () =>
             import(/* webpackChunkName: "about" */ "@/views/About.vue")
-        }
+        },
       ]
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: () =>
+        import(/* webpackChunkName: "login" */ "@/views/Login.vue")
     },
     {
       path: "/about",

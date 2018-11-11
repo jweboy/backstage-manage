@@ -14,6 +14,9 @@ Vue.component("Upload", iView.Upload);
 Vue.component("Row", iView.Row);
 Vue.component("Card", iView.Card);
 Vue.component("Tooltip", iView.Tooltip);
+Vue.component("Form", iView.Form);
+Vue.component("FormItem", iView.FormItem);
+Vue.component("Input", iView.Input);
 
 // 添加别名解决和HTML标签重名的问题(col会被识别成void元素)
 // https://github.com/vuejs/eslint-plugin-vue/issues/604
