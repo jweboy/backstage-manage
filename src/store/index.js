@@ -8,5 +8,5 @@ export default new Vuex.Store({
   // 插件
   plugins: [],
   // 模块化
-  modules
+  modules,
 });

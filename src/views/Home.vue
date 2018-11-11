@@ -17,28 +17,31 @@
   margin: 0 auto;
   margin-right: 0;
 }
+.layout-menu{
+  display: flex;
+  justify-content: flex-end;
+}
 </style>
 <template>
   <div class="home">
     <Layout>
       <Sider> <LeftMenu /> </Sider>
       <Layout class="main">
-        <header class="layout-header" :menu="menu">
-          <menu mode="horizontal" active-name="user">
-            <div class="layout-nav">
-              <menuitem v-for="item in menu" name="item.key" :key="item.key">
-                <Icon type="item.icon" /> <span>{{ item.name }}</span>
-              </menuitem>
-            </div>
-          </menu>
-        </header>
-        <main class="layout-main">
-          <Breadcrumb class="breadcrumb">
+        <Header class="layout-header" :menu="menu">
+          <Menu mode="horizontal" active-name="user" class="layout-menu">
+            <MenuItem v-for="item in menu" name="item.key" :key="item.key" :to="item.url">
+              <Icon :type="item.icon" />
+              <span>{{ item.name }}</span>
+            </MenuItem>
+          </Menu>
+        </Header>
+        <Main class="layout-main">
+          <!-- <Breadcrumb class="breadcrumb">
             <BreadcrumbItem>home</BreadcrumbItem>
             <BreadcrumbItem>home2</BreadcrumbItem>
-          </Breadcrumb>
+          </Breadcrumb> -->
           <router-view />
-        </main>
+        </Main>
       </Layout>
     </Layout>
   </div>
@@ -49,15 +52,16 @@ export default {
   data() {
     return {
       menu: [
-        {
-          name: "个人中心",
-          icon: "md-person",
-          key: "user"
-        },
+        // {
+        //   name: "个人中心",
+        //   icon: "md-person",
+        //   key: "user"
+        // },
         {
           name: "退出登录",
           icon: "ios-navigate",
-          key: "loginOut"
+          key: "loginOut",
+          url: '/login'
         }
       ]
     };

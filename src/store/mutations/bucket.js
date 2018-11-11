@@ -1,16 +1,26 @@
 import { FETCH_REQUEST, FETCH_SUCCESS, FETCH_FAILURE } from "../contants/types";
+import router from '../../router';
+import VueRouter from "vue-router";
 
 export default {
   [FETCH_REQUEST](state, action) {
-    state[action.request].isFetching = true;
+    state.isFetching = true;
   },
   [FETCH_SUCCESS](state, action) {
-    state[action.request].isFetching = false;
-    state[action.request].data = action.data;
-    state[action.request].lastUpdated = new Date().getTime();
+    state.isFetching = false;
+    state.data = action.data;
+    state.lastUpdated = new Date().getTime();
   },
   [FETCH_FAILURE](state, action) {
-    state[action.request].isFetching = false;
-    state[action.request].error = action.error;
+    state.isFetching = false;
+    state.error = action.error;
+  },
+  onClick(state, action) {
+    const { name } = action;
+    state.name = name;
+    router.push(`/file/${name}`)
+  },
+  goBack() {
+    router.go(-1);
   }
 };
