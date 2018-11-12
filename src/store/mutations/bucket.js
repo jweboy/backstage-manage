@@ -7,8 +7,9 @@ export default {
     state.isFetching = true;
   },
   [FETCH_SUCCESS](state, action) {
+    const { type } = action;
     state.isFetching = false;
-    state.data = action.data;
+    state[type] = action[type];
     state.lastUpdated = new Date().getTime();
   },
   [FETCH_FAILURE](state, action) {

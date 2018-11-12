@@ -29,7 +29,7 @@ import { mapState, mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   components: { LeftMenu, BucketList, FileList },
   methods: {
-    ...mapActions(["asyncFetchList"]),
+    ...mapActions(["asyncFetchBucketList"]),
     ...mapMutations(["onClick"])
   },
   // TODO: mapState和mapGetters的区别
@@ -39,7 +39,7 @@ export default {
   }),
   mounted() {
     // 获取镜像空间列表
-    this.asyncFetchList()
+    this.asyncFetchBucketList()
 
     console.log(this.$route);
   }
