@@ -1,5 +1,5 @@
 export default {
-  getListData: (state) => {
+  getBucketListData: (state) => {
     console.log("getter:", state);
     return state;
   }

@@ -7,6 +7,7 @@ export const bucket = {
     isFetching: false,
     data: [],
     name: '',
+    files: [],
   },
   actions,
   gutters,

@@ -1,7 +1,6 @@
 <style scoped>
 .layout-main {
-  padding: 0 24px 24px;
-  margin-top: 80px;
+  padding: 80px 24px 24px 24px;
   height: calc(100vh - 64px);
 }
 .layout-header {

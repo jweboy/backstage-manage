@@ -68,7 +68,7 @@
     </header>
     <section class="layout-content">
        <Row :gutter="16">
-        <ICol v-for="item in defaultList" span="6" :key="item.name">
+        <ICol v-for="item in list.data" span="6" :key="item.name">
           <Card class="card">
             <p slot="title" class="title">
               <Tooltip :content="item.name" placement="top">
@@ -92,25 +92,16 @@
   </div>
 </template>
 <script>
-  import { mapMutations, mapState } from "vuex";
+  import { mapMutations, mapState, mapActions } from "vuex";
   export default {
     data() {
       return {
-        defaultList: [
-            {
-                'name': 'a42bdcc1178e62b4694c830f028db5c0',
-                'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
-            },
-            {
-                'name': 'bc7521e033abdd1e92222d733590f104',
-                'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
-            }
-        ],
         visible: false,
         imgName: '',
       }
     },
     methods: {
+      ...mapActions(['asyncFetchFileList']),
       // TODO: 这里的goBack也需要迁回
       ...mapMutations(['goBack']),
       // 处理文件格式
@@ -146,13 +137,20 @@
       handleBeforeUpload() {},
     },
     computed: mapState({
-      bucket: ({ bucket }) => {
-        const { name } = bucket
+      // bucket: ({ bucket }) => {
+      //   const { name } = bucket
 
-        return `http://118.24.155.105:4000/v1/qiniu/file/${name}`;
-      }
+      //   return `http://118.24.155.105:4000/v1/qiniu/file/${name}`;
+      // },
+      list: state => state.bucket.files,
+      bucket: state => state.bucket,
     }),
     mounted() {
+      this.asyncFetchFileList({ 
+        bucket: this.bucket.name,
+        page: 1,
+        size: 5
+      });
       // console.log(this.$route, this.bucket);
     }
   }
