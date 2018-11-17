@@ -51,9 +51,12 @@ Axios.interceptors.response.use(
   }
 )
 
+// 导出用于vuex
+export const request = Axios
+
 // 封装成Vue原型链的$http方法
 export default {
   install: function(Vue, option) {
     Object.defineProperty(Vue.prototype, '$http', { value: Axios })
-  }
+  },
 }

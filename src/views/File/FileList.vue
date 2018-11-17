@@ -68,7 +68,7 @@
     </header>
     <section class="layout-content">
        <Row :gutter="16">
-        <ICol v-for="item in list.data" span="6" :key="item.name">
+        <ICol v-for="item in files.data" span="6" :key="item.name">
           <Card class="card">
             <p slot="title" class="title">
               <Tooltip :content="item.name" placement="top">
@@ -92,10 +92,12 @@
   </div>
 </template>
 <script>
-  import { mapMutations, mapState, mapActions } from "vuex";
+  import { mapMutations, mapState, mapActions, mapGetters } from "vuex";
   export default {
     data() {
       return {
+        page: 1,
+        size: 10,
         visible: false,
         imgName: '',
       }
@@ -123,12 +125,8 @@
         // TODO: 图片预览功能
         this.$Modal.confirm({
           okText: '修改',
-          // render: (h) => {
-          //   return h('Input', {
-          //     props: {
-          //       // src: `https://o5wwk8baw.qnssl.com/${name}/large`,
-          //       placeholder: 2
-          //     }
+          // ren      console.log(this.$route, this.files);
+        //     }
           //   })
           // },
         })
@@ -136,22 +134,13 @@
       },
       handleBeforeUpload() {},
     },
-    computed: mapState({
-      // bucket: ({ bucket }) => {
-      //   const { name } = bucket
-
-      //   return `http://118.24.155.105:4000/v1/qiniu/file/${name}`;
-      // },
-      list: state => state.bucket.files,
-      bucket: state => state.bucket,
-    }),
+    computed: mapGetters(['name', 'files']),
     mounted() {
-      this.asyncFetchFileList({ 
-        bucket: this.bucket.name,
-        page: 1,
-        size: 5
+      this.asyncFetchFileList({
+        bucket: this.name,
+        page: this.page,
+        size: this.size,
       });
-      // console.log(this.$route, this.bucket);
     }
   }
 </script>

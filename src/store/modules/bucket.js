@@ -1,5 +1,5 @@
 import actions from "../actions/bucket";
-import gutters from "../gutters/bucket";
+import getters from "../getters/bucket";
 import mutations from "../mutations/bucket";
 
 export const bucket = {
@@ -10,6 +10,6 @@ export const bucket = {
     files: [],
   },
   actions,
-  gutters,
+  getters,
   mutations
 };

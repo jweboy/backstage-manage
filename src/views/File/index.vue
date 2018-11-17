@@ -16,7 +16,7 @@
     <header class="header">
       <h2>存储空间列表</h2>
     </header>
-    <BucketList :list="list" :on-click="onClick" />
+    <BucketList :list="bucket" :on-click="onClick" />
   </div>
 </template>
 <script>
@@ -32,16 +32,10 @@ export default {
     ...mapActions(["asyncFetchBucketList"]),
     ...mapMutations(["onClick"])
   },
-  // TODO: mapState和mapGetters的区别
-  // ...mapGetters(["getData"]),
-  computed: mapState({
-    list: state => state.bucket.data,
-  }),
+  computed: mapGetters(['bucket']),
   mounted() {
     // 获取镜像空间列表
     this.asyncFetchBucketList()
-
-    console.log(this.$route);
   }
 };
 </script>
