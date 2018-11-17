@@ -24,13 +24,13 @@ export default {
     return {
       menu: [
         {
-          title: "附件管理",
+          title: "图库管理",
           key: "file",
           link: "/file",
           icon: "md-archive"
         },
         {
-          title: "测试管理",
+          title: "系统设置",
           key: "test",
           link: "/test",
           icon: "md-archive"

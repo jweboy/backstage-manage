@@ -1,5 +1,5 @@
 import actions from "../actions/bucket";
-import gutters from "../gutters/bucket";
+import getters from "../getters/bucket";
 import mutations from "../mutations/bucket";
 
 export const bucket = {
@@ -7,9 +7,12 @@ export const bucket = {
     isFetching: false,
     data: [],
     name: '',
-    files: [],
+    files: {
+      data: [],
+      total: 0,
+    },
   },
   actions,
-  gutters,
+  getters,
   mutations
 };

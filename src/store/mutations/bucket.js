@@ -1,6 +1,5 @@
 import { FETCH_REQUEST, FETCH_SUCCESS, FETCH_FAILURE } from "../contants/types";
 import router from '../../router';
-import VueRouter from "vue-router";
 
 export default {
   [FETCH_REQUEST](state, action) {

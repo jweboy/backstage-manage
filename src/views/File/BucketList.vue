@@ -32,5 +32,9 @@
 <script>
   export default {
     props: ['list', 'onClick'],
+    async mounted() {
+      // const testData = await this.$http.get('/qiniu/bucket');
+      // console.warn(testData);
+    }
   }
 </script>

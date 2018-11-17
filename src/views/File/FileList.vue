@@ -54,21 +54,27 @@
       <!-- 不显示默认上传列表，文件必须是图片类型，文件大小不超过2M -->
       <Upload 
         class="upload" 
-        action="http://118.24.155.105:4000/v1/qiniu/file/erer"
+        :action="'http://118.24.155.105:4000/v1/qiniu/file/' + name"
         :before-upload="handleBeforeUpload"
         :show-upload-list="false"
         :format="['jpg', 'jpeg', 'png', 'gif']"
         :max-size="2048"
         :on-exceeded-size="handleMaxSize"
         :on-format-error="handleFormatError"
+        :on-success="handleSuccess"
+        :on-error="handleError"
       >
         <Button icon="ios-cloud-upload-outline" type="primary">上传文件</Button>
       </Upload>
       <Button class="back" type="success" @click="goBack(-1)">返回</Button>
     </header>
     <section class="layout-content">
-       <Row :gutter="16">
-        <ICol v-for="item in list.data" span="6" :key="item.name">
+      <Scroll 
+        :on-reach-bottom="handleScroll"
+        :loading-text="loadingText"
+      >
+        <Row :gutter="16">
+        <ICol v-for="item in files.data" span="6" :key="item.name">
           <Card class="card">
             <p slot="title" class="title">
               <Tooltip :content="item.name" placement="top">
@@ -78,7 +84,7 @@
             <div class="content">
               <!-- TODO: 考虑增加一个进度条 -->
               <template>
-                <img :src="item.url" class="logo">
+                <img :src="previewUrl + item.name" class="logo">
                 <div class="card-cover">
                     <Icon type="ios-eye-outline" @click.native="handleView(item)"></Icon>
                     <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
@@ -87,21 +93,27 @@
             </div>
           </Card>
         </ICol>
-       </Row>
+        </Row>
+      </Scroll>
     </section>
   </div>
 </template>
 <script>
-  import { mapMutations, mapState, mapActions } from "vuex";
+  import { mapMutations, mapActions, mapGetters } from "vuex";
   export default {
     data() {
       return {
+        page: 1,
+        size: 12,
+        loadingText: '',
         visible: false,
         imgName: '',
+        // TODO: 这里需要根据不同的bucket来区分
+        previewUrl: 'http://pi12bat83.bkt.clouddn.com/',
       }
     },
     methods: {
-      ...mapActions(['asyncFetchFileList']),
+      ...mapActions(['asyncFetchFileList', 'asyncDeleteFile']),
       // TODO: 这里的goBack也需要迁回
       ...mapMutations(['goBack']),
       // 处理文件格式
@@ -123,35 +135,67 @@
         // TODO: 图片预览功能
         this.$Modal.confirm({
           okText: '修改',
-          // render: (h) => {
-          //   return h('Input', {
-          //     props: {
-          //       // src: `https://o5wwk8baw.qnssl.com/${name}/large`,
-          //       placeholder: 2
-          //     }
+          // ren      console.log(this.$route, this.files);
+        //     }
           //   })
           // },
         })
         this.imgName = name
       },
       handleBeforeUpload() {},
-    },
-    computed: mapState({
-      // bucket: ({ bucket }) => {
-      //   const { name } = bucket
+      // 上传成功
+      handleSuccess(res, file, fileList) {
+        console.log(fileList);
+        this.$Message.success({
+          content: `${file.name}上传成功`,
+          // onClose: () => this.asyncFetchFileList({
+          //   bucket: this.name,
+          //   page: this.page,
+          //   size: this.size,
+          // })
+        })
+      },
+      // 上传失败
+      handleError(err, file) {
+        this.$Message.error({
+          content: `${file.name}上传失败，请稍后重试`,
+        })
+      },
+      // 文件删除
+      handleRemove(item) {
+        // TODO: 缺少ID
+        this.asyncDeleteFile({ bucket: this.name, name: item.key })
+      },
+      // 滚动监听
+      handleScroll() {
+        const isEnd = this.checkIsEnd();
+        this.loadingText = !isEnd ? '加载中……' : '到底啦～'
 
-      //   return `http://118.24.155.105:4000/v1/qiniu/file/${name}`;
-      // },
-      list: state => state.bucket.files,
-      bucket: state => state.bucket,
-    }),
+        if(!isEnd) {
+          this.page++;
+          // TODO: 接口需要增加去重复请求问题
+          this.asyncFetchFileList({
+            bucket: this.name,
+            page: this.page,
+            size: this.size,
+          });
+        }
+      },
+      // 检查是否加载到最后一页
+      checkIsEnd() {
+        console.warn(this.page, this.size, this.files.total);
+        const currCount = this.page * this.size
+        const totalCount = this.files.total
+        return !(currCount < totalCount)
+      }
+    },
+    computed: mapGetters(['name', 'files']),
     mounted() {
-      this.asyncFetchFileList({ 
-        bucket: this.bucket.name,
-        page: 1,
-        size: 5
+      this.asyncFetchFileList({
+        bucket: this.name,
+        page: this.page,
+        size: this.size,
       });
-      // console.log(this.$route, this.bucket);
     }
   }
 </script>

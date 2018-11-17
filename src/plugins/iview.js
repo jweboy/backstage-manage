@@ -17,6 +17,8 @@ Vue.component("Tooltip", iView.Tooltip);
 Vue.component("Form", iView.Form);
 Vue.component("FormItem", iView.FormItem);
 Vue.component("Input", iView.Input);
+Vue.component("Scroll", iView.Scroll);
+Vue.component("Spin", iView.Spin);
 
 // 添加别名解决和HTML标签重名的问题(col会被识别成void元素)
 // https://github.com/vuejs/eslint-plugin-vue/issues/604
@@ -26,6 +28,9 @@ Vue.component("ICol", iView.Col);
 Vue.prototype.$Loading = iView.LoadingBar;
 Vue.prototype.$Notice = iView.Notice;
 Vue.prototype.$Modal = iView.Modal;
-
+Vue.prototype.$Message = iView.Message;
 
 import "iview/dist/styles/iview.css";
+
+// 用于axios请求
+export const Message = iView.Message;
