@@ -26,4 +26,15 @@ export default {
         commit(FETCH_FAILURE, { error: err })
       })
   },
+  asyncDeleteFile({ commit }, params) {
+    commit(FETCH_REQUEST)
+
+    request.delete('/qiniu/file', { params })
+      .then(data => {
+        commit(FETCH_SUCCESS, data)
+      })
+      .catch(err => {
+        commit(FETCH_FAILURE, { error: err })
+      })
+  },
 };

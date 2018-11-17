@@ -54,13 +54,15 @@
       <!-- 不显示默认上传列表，文件必须是图片类型，文件大小不超过2M -->
       <Upload 
         class="upload" 
-        action="http://118.24.155.105:4000/v1/qiniu/file/erer"
+        :action="'http://118.24.155.105:4000/v1/qiniu/file/' + name"
         :before-upload="handleBeforeUpload"
         :show-upload-list="false"
         :format="['jpg', 'jpeg', 'png', 'gif']"
         :max-size="2048"
         :on-exceeded-size="handleMaxSize"
         :on-format-error="handleFormatError"
+        :on-success="handleSuccess"
+        :on-error="handleError"
       >
         <Button icon="ios-cloud-upload-outline" type="primary">上传文件</Button>
       </Upload>
@@ -78,7 +80,7 @@
             <div class="content">
               <!-- TODO: 考虑增加一个进度条 -->
               <template>
-                <img :src="item.url" class="logo">
+                <img :src="previewUrl + item.name" class="logo">
                 <div class="card-cover">
                     <Icon type="ios-eye-outline" @click.native="handleView(item)"></Icon>
                     <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
@@ -92,18 +94,20 @@
   </div>
 </template>
 <script>
-  import { mapMutations, mapState, mapActions, mapGetters } from "vuex";
+  import { mapMutations, mapActions, mapGetters } from "vuex";
   export default {
     data() {
       return {
         page: 1,
-        size: 10,
+        size: 12,
         visible: false,
         imgName: '',
+        // TODO: 这里需要根据不同的bucket来区分
+        previewUrl: 'http://pi12bat83.bkt.clouddn.com/',
       }
     },
     methods: {
-      ...mapActions(['asyncFetchFileList']),
+      ...mapActions(['asyncFetchFileList', 'asyncDeleteFile']),
       // TODO: 这里的goBack也需要迁回
       ...mapMutations(['goBack']),
       // 处理文件格式
@@ -133,6 +137,29 @@
         this.imgName = name
       },
       handleBeforeUpload() {},
+      // 上传成功
+      handleSuccess(res, file, fileList) {
+        console.log(fileList);
+        this.$Message.success({
+          content: `${file.name}上传成功`,
+          // onClose: () => this.asyncFetchFileList({
+          //   bucket: this.name,
+          //   page: this.page,
+          //   size: this.size,
+          // })
+        })
+      },
+      // 上传失败
+      handleError(err, file) {
+        this.$Message.error({
+          content: `${file.name}上传失败，请稍后重试`,
+        })
+      },
+      // 文件删除
+      handleRemove(item) {
+        // TODO: 缺少ID
+        this.asyncDeleteFile({ bucket: this.name, name: item.key })
+      }
     },
     computed: mapGetters(['name', 'files']),
     mounted() {
