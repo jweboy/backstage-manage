@@ -26,6 +26,9 @@ Vue.component("ICol", iView.Col);
 Vue.prototype.$Loading = iView.LoadingBar;
 Vue.prototype.$Notice = iView.Notice;
 Vue.prototype.$Modal = iView.Modal;
-
+Vue.prototype.$Message = iView.Message;
 
 import "iview/dist/styles/iview.css";
+
+// 用于axios请求
+export const Message = iView.Message;
