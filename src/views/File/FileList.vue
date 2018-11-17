@@ -69,7 +69,11 @@
       <Button class="back" type="success" @click="goBack(-1)">返回</Button>
     </header>
     <section class="layout-content">
-       <Row :gutter="16">
+      <Scroll 
+        :on-reach-bottom="handleScroll"
+        :loading-text="loadingText"
+      >
+        <Row :gutter="16">
         <ICol v-for="item in files.data" span="6" :key="item.name">
           <Card class="card">
             <p slot="title" class="title">
@@ -89,7 +93,8 @@
             </div>
           </Card>
         </ICol>
-       </Row>
+        </Row>
+      </Scroll>
     </section>
   </div>
 </template>
@@ -100,6 +105,7 @@
       return {
         page: 1,
         size: 12,
+        loadingText: '',
         visible: false,
         imgName: '',
         // TODO: 这里需要根据不同的bucket来区分
@@ -159,6 +165,28 @@
       handleRemove(item) {
         // TODO: 缺少ID
         this.asyncDeleteFile({ bucket: this.name, name: item.key })
+      },
+      // 滚动监听
+      handleScroll() {
+        const isEnd = this.checkIsEnd();
+        this.loadingText = !isEnd ? '加载中……' : '到底啦～'
+
+        if(!isEnd) {
+          this.page++;
+          // TODO: 接口需要增加去重复请求问题
+          this.asyncFetchFileList({
+            bucket: this.name,
+            page: this.page,
+            size: this.size,
+          });
+        }
+      },
+      // 检查是否加载到最后一页
+      checkIsEnd() {
+        console.warn(this.page, this.size, this.files.total);
+        const currCount = this.page * this.size
+        const totalCount = this.files.total
+        return !(currCount < totalCount)
       }
     },
     computed: mapGetters(['name', 'files']),

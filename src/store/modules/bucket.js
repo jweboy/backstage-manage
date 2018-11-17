@@ -7,7 +7,10 @@ export const bucket = {
     isFetching: false,
     data: [],
     name: '',
-    files: [],
+    files: {
+      data: [],
+      total: 0,
+    },
   },
   actions,
   getters,

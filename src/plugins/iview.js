@@ -17,6 +17,8 @@ Vue.component("Tooltip", iView.Tooltip);
 Vue.component("Form", iView.Form);
 Vue.component("FormItem", iView.FormItem);
 Vue.component("Input", iView.Input);
+Vue.component("Scroll", iView.Scroll);
+Vue.component("Spin", iView.Spin);
 
 // 添加别名解决和HTML标签重名的问题(col会被识别成void元素)
 // https://github.com/vuejs/eslint-plugin-vue/issues/604

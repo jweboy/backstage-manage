@@ -1,6 +1,12 @@
 import { FETCH_REQUEST, FETCH_SUCCESS, FETCH_FAILURE } from "../contants/types";
 import { request } from '../../plugins/axios';
 
+// TODO: 这里需要优化到函数里
+const payload = { 
+  type: 'files', 
+  files: { data: [] }, 
+};
+
 export default {
   asyncFetchBucketList({ commit }) {
     commit(FETCH_REQUEST);
@@ -14,12 +20,16 @@ export default {
       });
   },
   asyncFetchFileList({ commit }, params) {
-    const payload = { type: 'files', files: [] };
+    
     commit(FETCH_REQUEST, payload);
 
     request.get("/qiniu/file", { params })
-      .then(data => {
-        payload.files = data;
+      .then(res => {
+        payload.files.data = [
+          ...payload.files.data,
+          ...res.data
+        ];
+        payload.files.total = res.total;
         commit(FETCH_SUCCESS, payload)
       })
       .catch(err => {
