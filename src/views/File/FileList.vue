@@ -1,101 +1,143 @@
 <style scoped>
-  .upload{
-    float: right;
-  }
-  .back{
-    float: left;
-  }
-  .layout-header{
+  .el-card{
     margin-bottom: 20px;
-    overflow: hidden;
-    content: '.';
-    clear: both;
   }
-  .card{
-    position: relative;
-    margin-bottom: 15px;
-  }
-  .card .title{
+  .el-dropdown {
+    float: right;
+    color: #409eff;
     cursor: pointer;
   }
-  .card .content{
-    text-align: center;
+  .layout-header{
+    margin-bottom: 15px;
   }
-  .card .logo{
-      width: 80%;
-      height: 80%;
+  .layout-list{
+    padding: 15px 7px;
+    margin-bottom: 15px;
+    height: 656px;
+    border: 1px solid #eee;
   }
-  .card-cover{
-    margin-top: 50px;
-    display: none;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0,0,0,.6);
+  .thumbnail{
+    display: block;
+    margin: auto;
+    width: 100%;
+    max-width: 200px;
   }
-  .content:hover .card-cover{
-      display: flex;
-      justify-content: center;
-      align-items: center;
+  .title{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
-  .card-cover i{
-      color: #fff;
-      font-size: 30px;
-      cursor: pointer;
-      margin: 0 2px;
+  .content{
+    padding-top: 14px;
+  }
+  .bottom {
+    margin-top: 13px;
+  }
+  .time {
+    font-size: 13px;
+    color: #999;
+  }
+  .pagination{
+    float: right;
+  }
+  .btns{
+    float: right;
   }
 </style>
 
 <template>
   <div class="file-list">
     <header class="layout-header">
-      <!-- 不显示默认上传列表，文件必须是图片类型，文件大小不超过2M -->
-      <Upload 
-        class="upload" 
-        :action="'http://118.24.155.105:4000/v1/qiniu/file/' + name"
-        :before-upload="handleBeforeUpload"
-        :show-upload-list="false"
-        :format="['jpg', 'jpeg', 'png', 'gif']"
-        :max-size="2048"
-        :on-exceeded-size="handleMaxSize"
-        :on-format-error="handleFormatError"
-        :on-success="handleSuccess"
-        :on-error="handleError"
-      >
-        <Button icon="ios-cloud-upload-outline" type="primary">上传文件</Button>
-      </Upload>
-      <Button class="back" type="success" @click="goBack(-1)">返回</Button>
+      <el-row type="flex" justify="space-between">
+        <el-col :span="2">
+          <el-button class="back" type="success" @click="goBack(-1)">返回</el-button>
+        </el-col>
+        <el-col :span="2">
+          <!-- 不显示默认上传列表，文件必须是图片类型，文件大小不超过2M  :action="uploadUrl + name" -->
+          <el-upload 
+            :action="uploadUrl + name"
+            :before-upload="handleBeforeUpload"
+            :show-file-list="false"
+            :on-success="handleSuccessUpload"
+            :on-error="handleErrorUpload"
+          >
+            <el-button icon="ios-cloud-upload-outline" type="primary">上传文件</el-button>
+          </el-upload>
+        </el-col>
+      </el-row>
     </header>
-    <section class="layout-content">
-      <Scroll 
-        :on-reach-bottom="handleScroll"
-        :loading-text="loadingText"
-      >
-        <Row :gutter="16">
-        <ICol v-for="item in files.data" span="6" :key="item.name">
-          <Card class="card">
-            <p slot="title" class="title">
-              <Tooltip :content="item.name" placement="top">
-                <span>{{ item.name }}</span>
-              </Tooltip>
-            </p>
+    <div class="layout-content">
+      <el-row :gutter="16" class="layout-list">
+        <el-col v-for="item in files.data" :span="6" :key="item.name">
+          <el-card>
+            <img class="thumbnail" src="../../assets/logo.png" />
             <div class="content">
-              <!-- TODO: 考虑增加一个进度条 -->
-              <template>
-                <img :src="previewUrl + item.name" class="logo">
-                <div class="card-cover">
-                    <Icon type="ios-eye-outline" @click.native="handleView(item)"></Icon>
-                    <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-                </div>
-              </template>
+              <div class="title">
+                <span>{{ item.name }}</span>
+                <!-- <el-tooltip :content="item.name">
+                  <span>{{ item.name }}</span>
+                </el-tooltip> -->
+              </div>
+              <div class="bottom">
+                <span class="time">{{currentDate}}</span>
+                <span class="btns">
+                  <el-button 
+                    @click.stop="handleDownloadFile(item)"
+                    type="warning" 
+                    icon="el-icon-download" 
+                    size="mini" 
+                    circle
+                  ></el-button>
+                  <el-button 
+                    @click.stop="handleEditFile(item)"
+                    type="primary" 
+                    icon="el-icon-edit" 
+                    size="mini" 
+                    circle
+                  ></el-button>
+                  <el-button 
+                    @click.stop="handleDeleteFile(item)"
+                    type="danger" 
+                    icon="el-icon-delete" 
+                    size="mini" 
+                    circle
+                  ></el-button>
+                </span>
+              </div>
             </div>
-          </Card>
-        </ICol>
-        </Row>
-      </Scroll>
-    </section>
+          </el-card>
+        </el-col>
+      </el-row>
+      <div class="pagination">
+        <el-pagination 
+          background
+          layout="prev, pager, next"
+          :page-size="size"
+          :page-count="page"
+          :total="files.total"
+          @current-change="handlePageChange"
+        ></el-pagination>
+      </div>
+    </div>
+    <el-dialog width="500px" title="编辑图片" :visible.sync="dialogVisible">
+      <el-form ref="editForm" :model="editForm" label-position="left" label-width="80px">
+        <el-form-item label="名称" prop="name">
+          <el-input type="name" v-model="editForm.name" placeholder="请输入名称" />
+        </el-form-item>
+        <el-form-item label="类型" prop="type">
+          <el-radio-group v-model="editForm.type">
+            <el-radio label=".png" type="type"></el-radio>
+            <el-radio label=".jpg" type="type"></el-radio>
+            <el-radio label=".jepg" type="type"></el-radio>
+            <el-radio label=".gif" type="type"></el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click.stop="handleSubmit">确定</el-button>
+          <el-button @click.stop="handleCancelDialog">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -104,98 +146,113 @@
     data() {
       return {
         page: 1,
-        size: 12,
+        size: 8,
         loadingText: '',
         visible: false,
         imgName: '',
         // TODO: 这里需要根据不同的bucket来区分
-        previewUrl: 'http://pi12bat83.bkt.clouddn.com/',
+        previewUrl: 'http://pjxbdoiaf.bkt.clouddn.com/',
+        uploadUrl: 'http://118.24.155.105:4000/v1/qiniu/file/',
+        currentDate: new Date().toLocaleDateString(),
+        dialogVisible: false,
+        editForm: {
+          name: '',
+          type: 0,
+        },
       }
     },
     methods: {
       ...mapActions(['asyncFetchFileList', 'asyncDeleteFile']),
       // TODO: 这里的goBack也需要迁回
       ...mapMutations(['goBack']),
-      // 处理文件格式
-      handleFormatError(file) {
-        this.$Notice.warning({
-          title: '文件格式错误',
-          desc: `${file.name}文件格式错误，仅支持 ".png" ".jpg" ".jpeg" ".gif" 的图片文件`
-        })
+      /* =================== 文件上传 =================== */
+      handleBeforeUpload(file) {
+        // TODO: 图片格式正则
+        // const imgReg = /\.(jpe?g|gif|png)/;
+        const isImage = ~file.type.indexOf('image');
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if(!isImage) {
+          this.$message.error(`${file.name}文件格式错误，仅支持 ".png" ".jpg" ".jpeg" ".gif" 的图片文件`);
+        }
+
+        if(!isLt2M) {
+          this.$message.error(`${file.name}太大了，请上传不超过2M的文件`);
+        }
+
+        // console.log(file, isImage && isLt2M);
+        // console.log('Upload is image: %s', isImage);
+        // console.log('Upload is in limit size: %s', isLt2M);
+
+        return !!isImage && isLt2M;
       },
-      // 处理文件大小
-      handleMaxSize(file) {
-        this.$Notice.warning({
-          title: '文件大小错误',
-          desc: `${file.name}太大了，请上传不超过2M的文件`
-        })
-      },
-      // 文件预览
-      handleView({ name }) {
-        // TODO: 图片预览功能
-        this.$Modal.confirm({
-          okText: '修改',
-          // ren      console.log(this.$route, this.files);
-        //     }
-          //   })
-          // },
-        })
-        this.imgName = name
-      },
-      handleBeforeUpload() {},
       // 上传成功
-      handleSuccess(res, file, fileList) {
-        console.log(fileList);
-        this.$Message.success({
-          content: `${file.name}上传成功`,
-          // onClose: () => this.asyncFetchFileList({
-          //   bucket: this.name,
-          //   page: this.page,
-          //   size: this.size,
-          // })
-        })
+      handleSuccessUpload(res, file, fileList) {
+        this.$message.success(`${file.name}上传成功`);
+        this.getCurrPageData();
       },
       // 上传失败
-      handleError(err, file) {
-        this.$Message.error({
-          content: `${file.name}上传失败，请稍后重试`,
+      handleErrorUpload(err, file) {
+        this.$message.error(`${file.name}上传失败，请稍后重试`);
+      },
+      /* =================== 操作按钮 =================== */
+      // 文件删除
+      handleDeleteFile(item) {
+        // TODO: 接口返回缺少ID
+        this.$msgbox.confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          type: 'warning',
+        })
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: '删除成功',
+            });
+          })
+          .catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除',
+            });
+          });
+        // this.asyncDeleteFile({ bucket: this.name, name: item.key });
+      },
+      // 文件预览 + 编辑文件信息
+      handleEditFile(item) {
+        this.dialogVisible = true;
+      },
+      // 文件下载
+      handleDownloadFile(item) {
+        // const aTag = document.createElement('a');
+        // aTag.download = 'logo.png';
+        // aTag.href = URL.createObjectURL('https://geekjc-img.geekjc.com/logo.png');
+        // aTag.click();
+      },
+      // 翻页
+      handlePageChange(page) {
+        this.page = page;
+        this.getCurrPageData();
+      },
+      handleSubmit() {
+        // TODO: this.editForm值无法联动
+        this.$refs.editForm.validate((valid) => {
+          if(valid) {
+            console.log(this.editForm);
+            this.handleCancelDialog();
+          }
         })
       },
-      // 文件删除
-      handleRemove(item) {
-        // TODO: 缺少ID
-        this.asyncDeleteFile({ bucket: this.name, name: item.key })
+      handleCancelDialog() {
+        this.dialogVisible = false;
+        this.$refs.editForm.resetFields();
       },
-      // 滚动监听
-      handleScroll() {
-        const isEnd = this.checkIsEnd();
-        this.loadingText = !isEnd ? '加载中……' : '到底啦～'
-
-        if(!isEnd) {
-          this.page++;
-          // TODO: 接口需要增加去重复请求问题
-          this.asyncFetchFileList({
-            bucket: this.name,
-            page: this.page,
-            size: this.size,
-          });
-        }
+      // 获取列表
+      getCurrPageData() {
+        this.asyncFetchFileList({bucket: this.name,page: this.page,size: this.size });
       },
-      // 检查是否加载到最后一页
-      checkIsEnd() {
-        console.warn(this.page, this.size, this.files.total);
-        const currCount = this.page * this.size
-        const totalCount = this.files.total
-        return !(currCount < totalCount)
-      }
     },
     computed: mapGetters(['name', 'files']),
     mounted() {
-      this.asyncFetchFileList({
-        bucket: this.name,
-        page: this.page,
-        size: this.size,
-      });
+      this.getCurrPageData();
     }
   }
 </script>

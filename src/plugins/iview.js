@@ -1,36 +1,38 @@
 import Vue from "vue";
-import iView from "iview";
+import element from "element-ui";
 
-Vue.component("Button", iView.Button);
-Vue.component("Layout", iView.Layout);
-Vue.component("Sider", iView.Sider);
-Vue.component("Header", iView.Header);
-Vue.component("Menu", iView.Menu);
-Vue.component("MenuItem", iView.MenuItem);
-Vue.component("Icon", iView.Icon);
-Vue.component("Breadcrumb", iView.Breadcrumb);
-Vue.component("BreadcrumbItem", iView.BreadcrumbItem);
-Vue.component("Upload", iView.Upload);
-Vue.component("Row", iView.Row);
-Vue.component("Card", iView.Card);
-Vue.component("Tooltip", iView.Tooltip);
-Vue.component("Form", iView.Form);
-Vue.component("FormItem", iView.FormItem);
-Vue.component("Input", iView.Input);
-Vue.component("Scroll", iView.Scroll);
-Vue.component("Spin", iView.Spin);
+Vue.use(element.Container);
+Vue.use(element.Header);
+Vue.use(element.Aside);
+Vue.use(element.Main);
+Vue.use(element.Menu);
+Vue.use(element.MenuItem);
+Vue.use(element.Row);
+Vue.use(element.Col);
+Vue.use(element.Card);
+Vue.use(element.Button);
+Vue.use(element.Dropdown);
+Vue.use(element.DropdownItem);
+Vue.use(element.DropdownMenu);
+Vue.use(element.Upload);
+Vue.use(element.Tooltip);
+Vue.use(element.Pagination);
+Vue.use(element.Loading);
+Vue.use(element.Dialog);
+Vue.use(element.Form);
+Vue.use(element.FormItem);
+Vue.use(element.Input);
+Vue.use(element.Radio);
+Vue.use(element.RadioGroup);
+
+// 将部分常用的组件挂载到Vue对象上
+// Vue.prototype.$Loading = element.Loading;
+Vue.prototype.$msgbox = element.MessageBox;
+Vue.prototype.$message = element.Message;
+
 
 // 添加别名解决和HTML标签重名的问题(col会被识别成void元素)
 // https://github.com/vuejs/eslint-plugin-vue/issues/604
-Vue.component("ICol", iView.Col);
-
-// 将部分常用的组件挂载到Vue对象上
-Vue.prototype.$Loading = iView.LoadingBar;
-Vue.prototype.$Notice = iView.Notice;
-Vue.prototype.$Modal = iView.Modal;
-Vue.prototype.$Message = iView.Message;
-
-import "iview/dist/styles/iview.css";
 
 // 用于axios请求
-export const Message = iView.Message;
+// export const Message = element.Message;

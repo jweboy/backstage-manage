@@ -5,18 +5,17 @@
 .title {
   margin-left: 5px;
 }
+  .el-menu{
+    height:calc(100vh - 60px);
+  }
 </style>
 <template>
-  <Menu class="menu" width="auto" theme="dark" active-name="file">
-    <MenuItem
-      v-for="item in menu"
-      :name="item.key"
-      :to="item.link"
-      :key="item.key"
-    >
-      <Icon :type="item.icon" /> <span class="title">{{ item.title }}</span>
-    </MenuItem>
-  </Menu>
+  <el-menu default-active="/file" :router="true">
+    <el-menu-item v-for="item in menu" :index="item.key">
+      <i :class="item.icon"></i>
+      <span class="title">{{ item.name }}</span>
+    </el-menu-item>
+  </el-menu>
 </template>
 <script>
 export default {
@@ -24,16 +23,14 @@ export default {
     return {
       menu: [
         {
-          title: "图库管理",
-          key: "file",
-          link: "/file",
-          icon: "md-archive"
+          name: "图库管理",
+          key: "/file",
+          icon: "el-icon-picture"
         },
         {
-          title: "系统设置",
-          key: "test",
-          link: "/test",
-          icon: "md-archive"
+          name: "系统设置",
+          key: "/test",
+          icon: "el-icon-setting"
         }
       ]
     };

@@ -25,10 +25,7 @@ export default {
 
     request.get("/qiniu/file", { params })
       .then(res => {
-        payload.files.data = [
-          ...payload.files.data,
-          ...res.data
-        ];
+        payload.files.data = res.data;
         payload.files.total = res.total;
         commit(FETCH_SUCCESS, payload)
       })
