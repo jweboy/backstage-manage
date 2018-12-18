@@ -1,40 +1,65 @@
 <style scoped>
-  .card-box{
+  .logo {
+    display: block;
+    margin: auto;
+    width: 200px;
+    height: 200px;
+  }
+  .content{
+    padding: 14px 0;
+  }
+  .time {
+    font-size: 13px;
+    color: #999;
+  }
+  .bottom {
+    margin-top: 13px;
+    line-height: 12px;
+  }
+  .el-dropdown {
+    float: right;
+    color: #409eff;
     cursor: pointer;
   }
-  .card{
-    margin-bottom: 15px;
-  }
-  .content {
-    text-align: center;
-  }
-  .logo {
-    width: 160px;
-    height: 160px;
+  .el-card{
+    margin-bottom: 20px;
   }
 </style>
 
 <template>
-  <Row :gutter="16">
-    <ICol v-for="item in list" span="6" :key="item">
+  <el-row :gutter="20">
+    <el-col v-for="(item, index) in list" :span="6" :key="index">
       <div class="card-box" @click="onClick({ name: item })">
-        <Card :borered="false" class="card">
-          <p slot="title">{{ item }}</p>
-          <div class="content">
+        <el-card class="card" shadow="hover">
             <img src="../../assets/logo.png" class="logo" />
-          </div>
-        </Card>
+            <div class="content">
+              <span class="title">{{item}}</span>
+              <!-- <div class="bottom">
+                <time class="time">{{ currentDate }}</time>
+                <el-dropdown>
+                  <span class="button">
+                    操作
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item>查看</el-dropdown-item>
+                    <el-dropdown-item>删除</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </div> -->
+            </div>
+        </el-card>
       </div>
-    </ICol>
-  </Row>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
   export default {
     props: ['list', 'onClick'],
-    async mounted() {
-      // const testData = await this.$http.get('/qiniu/bucket');
-      // console.warn(testData);
+    data() {
+      return {
+        currentDate: new Date().toLocaleDateString(),
+      };
     }
   }
 </script>

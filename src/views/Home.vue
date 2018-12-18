@@ -16,34 +16,33 @@
   margin: 0 auto;
   margin-right: 0;
 }
-.layout-menu{
-  display: flex;
-  justify-content: flex-end;
-}
+  .element-menu{
+    display: flex;
+    justify-content: flex-end;
+  }
+  .el-main{
+    height: calc(100vh - 60px);
+    overflow-y: scroll;
+  }
 </style>
 <template>
-  <div class="home">
-    <Layout>
-      <Sider> <LeftMenu /> </Sider>
-      <Layout class="main">
-        <Header class="layout-header" :menu="menu">
-          <Menu mode="horizontal" active-name="user" class="layout-menu">
-            <MenuItem v-for="item in menu" name="item.key" :key="item.key" :to="item.url">
-              <Icon :type="item.icon" />
-              <span>{{ item.name }}</span>
-            </MenuItem>
-          </Menu>
-        </Header>
-        <Main class="layout-main">
-          <!-- <Breadcrumb class="breadcrumb">
-            <BreadcrumbItem>home</BreadcrumbItem>
-            <BreadcrumbItem>home2</BreadcrumbItem>
-          </Breadcrumb> -->
-          <router-view />
-        </Main>
-      </Layout>
-    </Layout>
-  </div>
+  <el-container>
+    <el-header>
+      <el-menu mode="horizontal" :router="true">
+          <el-menu-item v-for="item in menu" :index="item.key">
+            <span>{{ item.name }}</span>
+          </el-menu-item>
+        </el-menu>
+    </el-header>
+    <el-container>
+      <el-aside width="200px">
+        <LeftMenu />
+      </el-aside>
+      <el-main>
+        <router-view />
+      </el-main>
+    </el-container>
+  </el-container>
 </template>
 <script>
 import { LeftMenu } from "@/components";
@@ -59,8 +58,7 @@ export default {
         {
           name: "退出登录",
           icon: "ios-navigate",
-          key: "loginOut",
-          url: '/login'
+          key: "/login",
         }
       ]
     };

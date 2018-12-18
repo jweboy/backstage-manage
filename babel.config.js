@@ -2,10 +2,10 @@ module.exports = {
   presets: ["@vue/app"],
   plugins: [
     [
-      "import",
+      "component",
       {
-        libraryName: "iview",
-        libraryDirectory: "src/components"
+        "libraryName": "element-ui",
+        "styleLibraryName": "theme-chalk"
       }
     ]
   ]

@@ -20,7 +20,7 @@ export default {
     state.name = name;
     router.push(`/file/${name}`)
   },
-  goBack() {
+  goBack(state, action) {
     router.go(-1);
   }
 };
