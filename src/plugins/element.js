@@ -24,6 +24,8 @@ Vue.use(element.FormItem);
 Vue.use(element.Input);
 Vue.use(element.Radio);
 Vue.use(element.RadioGroup);
+Vue.use(element.Breadcrumb);
+Vue.use(element.BreadcrumbItem);
 
 // 将部分常用的组件挂载到Vue对象上
 // Vue.prototype.$Loading = element.Loading;

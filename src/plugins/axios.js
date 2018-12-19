@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Message } from './iview';
+import { Message } from './element';
 
 // 参考文章 https://juejin.im/post/59a22e71518825242c422604
 

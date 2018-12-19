@@ -68,7 +68,7 @@
     </header>
     <div class="layout-content">
       <el-row :gutter="16" class="layout-list">
-        <el-col v-for="item in files.data" :span="6" :key="item.name">
+        <el-col v-for="(item, index) in files.data" :span="6" :key="index">
           <el-card>
             <img class="thumbnail" src="../../assets/logo.png" />
             <div class="content">
@@ -133,8 +133,8 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click.stop="handleSubmit">确定</el-button>
-          <el-button @click.stop="handleCancelDialog">取消</el-button>
+          <el-button type="primary" @click="handleSubmit">确定</el-button>
+          <el-button @click="handleCancelDialog">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -233,11 +233,11 @@
         this.getCurrPageData();
       },
       handleSubmit() {
-        // TODO: this.editForm值无法联动
         this.$refs.editForm.validate((valid) => {
           if(valid) {
             console.log(this.editForm);
-            this.handleCancelDialog();
+            this.dialogVisible = false;
+            // this.handleCancelDialog();
           }
         })
       },
