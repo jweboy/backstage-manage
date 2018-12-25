@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Message } from './element';
+import { Loading, Notification } from './element';
 
 // 参考文章 https://juejin.im/post/59a22e71518825242c422604
 
@@ -15,11 +15,16 @@ const Axios = axios.create({
   headers: {
     'Content-Type': 'application/x-www-form-urlencode;charset=utf-8',
   }
-})
+});
+
+let loading = null;
 
 // 请求拦截器
 Axios.interceptors.request.use(
   function reqSuccHandler(config){
+    loading = Loading.service({
+      lock: true, // loading锁定页面滚动
+    });
     // console.log(config);
     return config
   },
@@ -31,18 +36,26 @@ Axios.interceptors.request.use(
 // 响应拦截器
 Axios.interceptors.response.use(
   function resSuccHandler(res) {
+    loading.close();
+
+    // TODO: 特定定义 比如我请求文件资源 下面的判断就不适用需要优化
+    // TODO: response错误码的判断
     if (!!res.data && res.data.code === 0) {
       return res.data.data
     } else {
-      const msg = res.data.error.message;
+      const msg = res.data ? res.data.error.message : '';
       const errMsg = msg.message ? msg.message : msg;
-      Message.error({
-        content: errMsg
-      })
+
+      Notification.error({
+        title: '请求错误',
+        message: errMsg
+      });
+
       return Promise.reject(msg);
     }
   },
   function resErrHander(err) {
+    loading.close();
     // TODO: 这里可以用来做登录、特定状态的判断
 
     // 返回错误信息

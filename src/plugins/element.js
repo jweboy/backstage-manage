@@ -32,9 +32,9 @@ Vue.use(element.BreadcrumbItem);
 Vue.prototype.$msgbox = element.MessageBox;
 Vue.prototype.$message = element.Message;
 
+// 用于axios请求
+export const Loading = element.Loading;
+export const Notification = element.Notification;
 
 // 添加别名解决和HTML标签重名的问题(col会被识别成void元素)
 // https://github.com/vuejs/eslint-plugin-vue/issues/604
-
-// 用于axios请求
-// export const Message = element.Message;
