@@ -39,13 +39,14 @@
         <LeftMenu />
       </el-aside>
       <el-main>
+        <!-- <Breadcrumb /> -->
         <router-view />
       </el-main>
     </el-container>
   </el-container>
 </template>
 <script>
-import { LeftMenu } from "@/components";
+import { LeftMenu, Breadcrumb } from "@/components";
 export default {
   data() {
     return {
@@ -63,6 +64,6 @@ export default {
       ]
     };
   },
-  components: { LeftMenu }
+  components: { LeftMenu, Breadcrumb }
 };
 </script>

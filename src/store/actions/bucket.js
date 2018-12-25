@@ -7,6 +7,7 @@ const payload = {
   files: { data: [] }, 
 };
 
+// TODO: request包装成一个公用的
 export default {
   asyncFetchBucketList({ commit }) {
     commit(FETCH_REQUEST);
@@ -36,7 +37,7 @@ export default {
   asyncDeleteFile({ commit }, params) {
     commit(FETCH_REQUEST)
 
-    request.delete('/qiniu/file', { params })
+    return request.delete('/qiniu/file', { params })
       .then(data => {
         commit(FETCH_SUCCESS, data)
       })
@@ -44,4 +45,26 @@ export default {
         commit(FETCH_FAILURE, { error: err })
       })
   },
+  asyncGetFielDetail({ commit }, params) {
+    commit(FETCH_REQUEST)
+
+    request.get('/qiniu/file/detail', { params })
+      .then(data => {
+        commit(FETCH_SUCCESS, data)
+      })
+      .catch(err => {
+        commit(FETCH_FAILURE, { error: err })
+      })
+  },
+  asyncUpdateFile({ commit }, data) {
+    commit(FETCH_REQUEST)
+
+    request.put('/qiniu/file/edit', { data: JSON.stringify(data) })
+      .then(data => {
+        commit(FETCH_SUCCESS, data)
+      })
+      .catch(err => {
+        commit(FETCH_FAILURE, { error: err })
+      })
+  }
 };

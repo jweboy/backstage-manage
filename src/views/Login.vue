@@ -21,28 +21,20 @@
 <template>
     <div class="layout-background">
         <div class="layout-form">
-            <Form ref="loginForm" :model="model" :rules="rules">
-                <FormItem prop="user">
-                    <Input type="text" placeholder="请输入用户名" v-model="model.user">
-                        <Icon type="ios-person-outline" slot="prepend"></Icon>
-                    </Input>
-                </FormItem>
-                <FormItem prop="password">
-                    <Input type="password" placeholder="请输入密码" v-model="model.password">
-                        <Icon type="ios-lock-outline" slot="prepend"></Icon>
-                    </Input>
-                </FormItem>
-                <FormItem>
+            <el-form ref="loginForm" :model="loginForm" label-width="70px">
+                <el-form-item label="用户名" prop="username" :rules="rules.username">
+                    <el-input type="text" placeholder="请输入用户名" v-model="loginForm.username"></el-input>
+                </el-form-item>
+                <el-form-item label="密码" prop="password" :rules="rules.password">
+                    <el-input type="password" placeholder="请输入密码" v-model="loginForm.password"></el-input>
+                </el-form-item>
+                <el-form-item>
                     <span>默认用户： admin 默认密码：123</span>
-                </FormItem>
-                <FormItem>
-                    <Button 
-                        type="primary" 
-                        @click="handleSubmit(model)"
-                        class="submit-btn"
-                    >登录</Button>
-                </FormItem>
-            </Form>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="handleSubmit">登录</el-button>
+                </el-form-item>
+            </el-form>
         </div>
     </div>
 </template>
@@ -51,44 +43,52 @@
     export default {
         data() {
             return {
-                model: {
-                    user: '',
+                loginForm: {
+                    username: '',
                     password: '',
                 },
                 rules: {
-                    user: {
+                    username: {
                         required: true,
                         message: '请输入用户名',
                         trgger: 'blur',
                     },
-                    password: [
-                        {
+                    password: {
                         required: true,
                         message: '请输入密码',
                         trgger: 'blur',
-                        },
-                    ]
+                    },
                 },
                 disabled: false,
             }
         },
         methods:{
-            handleSubmit(model) {
+            handleSubmit() {
                 // TODO: 增加接口
                 this.$refs.loginForm.validate((valid) => {
-                    if(model.user !== 'admin' || model.password !== '123') {
-                        this.$Notice.error({
-                            desc: '当前只支持默认用户admin'
-                        })
+                    if(!valid) {
+                        return false;
+                    }
+                    if(this.loginForm.username !== 'admin') {
+                        this.$message({
+                            type: 'error',
+                            message: '当前只支持默认用户admin'
+                        });
+                    } else if(this.loginForm.password !== '123') {
+                        this.$message({
+                            type: 'error',
+                            message: 'admin默认密码为123'
+                        });
                     } else {
-                        this.$Notice.success({
-                            desc: '登录成功'
-                        })
+                        this.$message({
+                            type: 'success',
+                            message: '登录成功'
+                        });
 
                         // TODO: router处理
                         setTimeout(() => {
                             location.href = '/'
-                        }, 1000)
+                        }, 1000);
                     }
                 })
             }

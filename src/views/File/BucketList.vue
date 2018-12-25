@@ -60,6 +60,9 @@
       return {
         currentDate: new Date().toLocaleDateString(),
       };
+    },
+    mounted() {
+      console.warn(this.$route)
     }
   }
 </script>

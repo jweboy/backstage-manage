@@ -68,9 +68,9 @@
     </header>
     <div class="layout-content">
       <el-row :gutter="16" class="layout-list">
-        <el-col v-for="item in files.data" :span="6" :key="item.name">
+        <el-col v-for="(item, index) in files.data" :span="6" :key="index">
           <el-card>
-            <img class="thumbnail" src="../../assets/logo.png" />
+            <img class="thumbnail" :src="previewUrl + item.name" />
             <div class="content">
               <div class="title">
                 <span>{{ item.name }}</span>
@@ -133,8 +133,8 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click.stop="handleSubmit">确定</el-button>
-          <el-button @click.stop="handleCancelDialog">取消</el-button>
+          <el-button type="primary" @click="handleSubmit">确定</el-button>
+          <el-button @click="handleCancelDialog">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -142,6 +142,7 @@
 </template>
 <script>
   import { mapMutations, mapActions, mapGetters } from "vuex";
+  import { request } from '../../plugins/axios';
   export default {
     data() {
       return {
@@ -151,18 +152,19 @@
         visible: false,
         imgName: '',
         // TODO: 这里需要根据不同的bucket来区分
-        previewUrl: 'http://pjxbdoiaf.bkt.clouddn.com/',
-        uploadUrl: 'http://118.24.155.105:4000/v1/qiniu/file/',
+        previewUrl: 'http://pk9xplija.bkt.clouddn.com/',
+        uploadUrl: 'http://118.24.155.105:4000/v1/qiniu/file?bucket=',
         currentDate: new Date().toLocaleDateString(),
         dialogVisible: false,
         editForm: {
           name: '',
           type: 0,
         },
+        currentItem: {},
       }
     },
     methods: {
-      ...mapActions(['asyncFetchFileList', 'asyncDeleteFile']),
+      ...mapActions(['asyncFetchFileList', 'asyncDeleteFile', 'asyncUpdateFile']),
       // TODO: 这里的goBack也需要迁回
       ...mapMutations(['goBack']),
       /* =================== 文件上传 =================== */
@@ -203,10 +205,16 @@
           type: 'warning',
         })
           .then(() => {
-            this.$message({
-              type: 'success',
-              message: '删除成功',
-            });
+            this.asyncDeleteFile({id: item.id })
+              .then(() => {
+                setTimeout(() => {
+                  this.getCurrPageData();
+                  this.$message({
+                    type: 'success',
+                    message: '删除成功',
+                  });
+                }, 300);
+              });
           })
           .catch(() => {
             this.$message({
@@ -214,17 +222,27 @@
               message: '已取消删除',
             });
           });
-        // this.asyncDeleteFile({ bucket: this.name, name: item.key });
+        // 
       },
       // 文件预览 + 编辑文件信息
       handleEditFile(item) {
         this.dialogVisible = true;
+        this.editForm.name = item.name;
+        this.currentItem = item;
+        // this.asyncGetFielDetail({ id: item.id });
       },
       // 文件下载
       handleDownloadFile(item) {
-        // const aTag = document.createElement('a');
+        // TODO: 文件下载完善
+        const aTag = document.createElement('a');
+        // request.get(this.previewUrl + item.name, {
+        //   responseType: 'arraybuffer'
+        // })
+        //   .then(data => {
+        //     console.error(data)
+        //   })
         // aTag.download = 'logo.png';
-        // aTag.href = URL.createObjectURL('https://geekjc-img.geekjc.com/logo.png');
+        // aTag.href = this.previewUrl + item.name;
         // aTag.click();
       },
       // 翻页
@@ -232,12 +250,18 @@
         this.page = page;
         this.getCurrPageData();
       },
-      handleSubmit() {
-        // TODO: this.editForm值无法联动
+      handleSubmit(item) {
         this.$refs.editForm.validate((valid) => {
           if(valid) {
             console.log(this.editForm);
-            this.handleCancelDialog();
+            this.dialogVisible = false;
+
+            const body = {
+              name: this.editForm.name,
+              id: this.currentItem.id,
+            };
+            this.asyncUpdateFile(body);
+            // this.handleCancelDialog();
           }
         })
       },
