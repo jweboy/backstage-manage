@@ -124,14 +124,14 @@
         <el-form-item label="名称" prop="name">
           <el-input type="name" v-model="editForm.name" placeholder="请输入名称" />
         </el-form-item>
-        <el-form-item label="类型" prop="type">
+        <!-- <el-form-item label="类型" prop="type">
           <el-radio-group v-model="editForm.type">
             <el-radio label=".png" type="type"></el-radio>
             <el-radio label=".jpg" type="type"></el-radio>
             <el-radio label=".jepg" type="type"></el-radio>
             <el-radio label=".gif" type="type"></el-radio>
           </el-radio-group>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" @click="handleSubmit">确定</el-button>
           <el-button @click="handleCancelDialog">取消</el-button>
@@ -253,15 +253,19 @@
       handleSubmit(item) {
         this.$refs.editForm.validate((valid) => {
           if(valid) {
-            console.log(this.editForm);
+            // console.log(this.editForm);
             this.dialogVisible = false;
 
             const body = {
               name: this.editForm.name,
               id: this.currentItem.id,
             };
-            this.asyncUpdateFile(body);
-            // this.handleCancelDialog();
+            
+            this.asyncUpdateFile(body)
+              .then(() => {
+                console.warn('ok');
+                // this.handleCancelDialog();
+              });
           }
         })
       },
@@ -271,7 +275,7 @@
       },
       // 获取列表
       getCurrPageData() {
-        this.asyncFetchFileList({bucket: this.name,page: this.page,size: this.size });
+        return this.asyncFetchFileList({bucket: this.name,page: this.page,size: this.size });
       },
     },
     computed: mapGetters(['name', 'files']),
