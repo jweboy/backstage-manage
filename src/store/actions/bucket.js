@@ -24,7 +24,7 @@ export default {
     
     commit(FETCH_REQUEST, payload);
 
-    request.get("/qiniu/file", { params })
+    return request.get("/qiniu/file", { params })
       .then(res => {
         payload.files.data = res.data;
         payload.files.total = res.total;
@@ -59,7 +59,7 @@ export default {
   asyncUpdateFile({ commit }, data) {
     commit(FETCH_REQUEST)
 
-    request.put('/qiniu/file/edit', { data: JSON.stringify(data) })
+    return request.put('/qiniu/file/edit', data, { _useForm: true })
       .then(data => {
         commit(FETCH_SUCCESS, data)
       })

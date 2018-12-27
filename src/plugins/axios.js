@@ -1,4 +1,5 @@
 import axios from 'axios';
+import qs from 'query-string';
 import { Loading, Notification } from './element';
 
 // 参考文章 https://juejin.im/post/59a22e71518825242c422604
@@ -13,8 +14,8 @@ const Axios = axios.create({
   // FIXME: 暂时不能加缓存，后续需要更改
   withCredentials: false, // 是否允许携带cookie等
   headers: {
-    'Content-Type': 'application/x-www-form-urlencode;charset=utf-8',
-  }
+    'content-Type': 'application/x-www-form-urlencode;charset=utf-8',
+  },
 });
 
 let loading = null;
@@ -25,7 +26,11 @@ Axios.interceptors.request.use(
     loading = Loading.service({
       lock: true, // loading锁定页面滚动
     });
-    // console.log(config);
+
+    if(config._useForm) {
+      config.headers['content-Type'] = 'application/x-www-form-urlencoded';
+      config.data = qs.stringify(config.data);
+    }
     return config
   },
   function reqErrHandler(err) {
