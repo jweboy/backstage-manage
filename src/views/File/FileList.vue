@@ -166,7 +166,7 @@
     methods: {
       ...mapActions(['asyncFetchFileList', 'asyncDeleteFile', 'asyncUpdateFile', 'syncCancelRequest']),
       // TODO: 这里的goBack也需要迁回
-      ...mapMutations(['goBack']),
+      ...mapMutations(['goBack', 'setBucket']),
       /* =================== 文件上传 =================== */
       handleBeforeUpload(file) {
         // TODO: 图片格式正则
@@ -270,7 +270,7 @@
               name: this.editForm.name,
               id: this.currentItem.id,
             };
-            
+
             this.handleCancelDialog();
             
             this.asyncUpdateFile(body)
@@ -291,12 +291,9 @@
     },
     computed: mapGetters(['name', 'files']),
     mounted() {
+      this.setBucket({ bucket: this.$route.params.bucket });
       this.getCurrPageData();
     }
   }
 </script>
-<style scoped>
-  
-
-</style>
 

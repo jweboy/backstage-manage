@@ -23,5 +23,8 @@ export default {
   },
   goBack(state, action) {
     router.go(-1);
+  },
+  setBucket(state, action) {
+    state.name = action.bucket;
   }
 };

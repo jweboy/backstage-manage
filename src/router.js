@@ -21,7 +21,7 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "bucketList" */ "@/views/File"),
         },
         {
-          path: '/file/:id',
+          path: '/file/:bucket',
           name: "文件列表",
           component: () => import(/* webpackChunkName: "fileList" */ "@/views/File/FileList"),
         },
