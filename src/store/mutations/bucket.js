@@ -16,14 +16,6 @@ export default {
   [FETCH_FAILURE](state, action) {
     state.isFetching = false;
   },
-  onClick(state, action) {
-    const { name } = action;
-    state.name = name;
-    router.push(`/file/${name}`)
-  },
-  goBack(state, action) {
-    router.go(-1);
-  },
   setBucket(state, action) {
     state.name = action.bucket;
   }

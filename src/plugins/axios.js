@@ -68,8 +68,6 @@ Axios.interceptors.response.use(
   function resSuccHandler(res) {
     loading && loading.close();
 
-    // TODO: 特定定义 比如我请求文件资源 下面的判断就不适用需要优化
-    // TODO: response错误码的判断
     if (!!res.data) {
       // 常规请求
       if(res.data.code === 0) {

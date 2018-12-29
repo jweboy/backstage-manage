@@ -27,8 +27,6 @@ export default {
       });
   },
   asyncDeleteFile({ commit }, params) {
-    commit(FETCH_REQUEST);
-
     // TODO: 提取一个公共函数处理URL
     return request.delete(`/qiniu/file?id=${params.id}`, { 
       _loading: false,
@@ -36,7 +34,6 @@ export default {
         cancelRequest = cancel;
       })
      })
-      .then(data => commit(FETCH_SUCCESS, data))
       .catch(err => Promise.reject(err));
   },
   syncCancelRequest() {
@@ -49,13 +46,10 @@ export default {
       .then(data => commit(FETCH_SUCCESS, data));
   },
   asyncUpdateFile({ commit }, data) {
-    commit(FETCH_REQUEST);
-
     return request.put('/qiniu/file/edit', data, { 
       _useForm: true, 
       _loading: false,
     })
-      .then(data => commit(FETCH_SUCCESS, data));
   },
   asyncDownloadFile(_, params) {
     return request.get(`http://pkhleymnc.bkt.clouddn.com/${params.name}`, {
