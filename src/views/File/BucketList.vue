@@ -29,40 +29,38 @@
 <template>
   <el-row :gutter="20">
     <el-col v-for="(item, index) in list" :span="6" :key="index">
-      <div class="card-box" @click="onClick({ name: item })">
-        <el-card class="card" shadow="hover">
-            <img src="../../assets/logo.png" class="logo" />
-            <div class="content">
-              <span class="title">{{item}}</span>
-              <!-- <div class="bottom">
-                <time class="time">{{ currentDate }}</time>
-                <el-dropdown>
-                  <span class="button">
-                    操作
-                  </span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>查看</el-dropdown-item>
-                    <el-dropdown-item>删除</el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-              </div> -->
-            </div>
-        </el-card>
-      </div>
+      <router-link :to="/file/ + item">
+        <div class="card-box">
+          <el-card class="card" shadow="hover">
+              <img src="../../assets/logo.png" class="logo" />
+              <div class="content">
+                <span class="title">{{item}}</span>
+                <!-- <div class="bottom">
+                  <time class="time">{{ currentDate }}</time>
+                  <el-dropdown>
+                    <span class="button">
+                      操作
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item>查看</el-dropdown-item>
+                      <el-dropdown-item>删除</el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </div> -->
+              </div>
+          </el-card>
+        </div>
+      </router-link>
     </el-col>
   </el-row>
 </template>
-
 <script>
   export default {
-    props: ['list', 'onClick'],
+    props: ['list'],
     data() {
       return {
         currentDate: new Date().toLocaleDateString(),
       };
     },
-    mounted() {
-      console.warn(this.$route)
-    }
   }
 </script>

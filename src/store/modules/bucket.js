@@ -6,7 +6,7 @@ export const bucket = {
   state: {
     isFetching: false,
     data: [],
-    name: 'new-test', // TODO: 需要从路由获取
+    name: '',
     files: {
       data: [],
       total: 0,

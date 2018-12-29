@@ -20,4 +20,7 @@ body {
   overflow: hidden;
   margin: 0;
 }
+a{
+  text-decoration: none;
+}
 </style>

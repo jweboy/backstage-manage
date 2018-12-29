@@ -1,50 +1,3 @@
-<style scoped>
-  .el-card{
-    margin-bottom: 20px;
-  }
-  .el-dropdown {
-    float: right;
-    color: #409eff;
-    cursor: pointer;
-  }
-  .layout-header{
-    margin-bottom: 15px;
-  }
-  .layout-list{
-    padding: 15px 7px;
-    margin-bottom: 15px;
-    height: 656px;
-    border: 1px solid #eee;
-  }
-  .thumbnail{
-    display: block;
-    margin: auto;
-    width: 100%;
-    max-width: 200px;
-  }
-  .title{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .content{
-    padding-top: 14px;
-  }
-  .bottom {
-    margin-top: 13px;
-  }
-  .time {
-    font-size: 13px;
-    color: #999;
-  }
-  .pagination{
-    float: right;
-  }
-  .btns{
-    float: right;
-  }
-</style>
-
 <template>
   <div class="file-list">
     <header class="layout-header">
@@ -53,7 +6,7 @@
           <el-button class="back" type="success" @click="goBack(-1)">返回</el-button>
         </el-col>
         <el-col :span="2">
-          <!-- 不显示默认上传列表，文件必须是图片类型，文件大小不超过2M  :action="uploadUrl + name" -->
+          <!-- 不显示默认上传列表，文件必须是图片类型，文件大小不超过2M  -->
           <el-upload 
             :action="uploadUrl + name"
             :before-upload="handleBeforeUpload"
@@ -68,7 +21,7 @@
     </header>
     <div class="layout-content">
       <el-row :gutter="16" class="layout-list">
-        <el-col v-for="(item, index) in files.data" :span="6" :key="index">
+        <el-col v-for="(item, index) in files.data" :span="8" :key="index">
           <el-card>
             <img class="thumbnail" :src="previewUrl + item.name" />
             <div class="content">
@@ -79,7 +32,7 @@
                 </el-tooltip> -->
               </div>
               <div class="bottom">
-                <span class="time">{{currentDate}}</span>
+                <span class="time">{{item.createTime}}</span>
                 <span class="btns">
                   <el-button 
                     @click.stop="handleDownloadFile(item)"
@@ -142,7 +95,10 @@
 </template>
 <script>
   import { mapMutations, mapActions, mapGetters } from "vuex";
-  import { request } from '../../plugins/axios';
+  import { download } from '../../util';
+
+  const DELAY = 300;
+
   export default {
     data() {
       return {
@@ -152,8 +108,8 @@
         visible: false,
         imgName: '',
         // TODO: 这里需要根据不同的bucket来区分
-        previewUrl: 'http://pk9xplija.bkt.clouddn.com/',
-        uploadUrl: 'http://118.24.155.105:4000/v1/qiniu/file?bucket=',
+        previewUrl: 'http://pkhleymnc.bkt.clouddn.com/',
+        uploadUrl: 'http://118.24.155.105:4000/api/v1/qiniu/file?bucket=',
         currentDate: new Date().toLocaleDateString(),
         dialogVisible: false,
         editForm: {
@@ -164,27 +120,24 @@
       }
     },
     methods: {
-      ...mapActions(['asyncFetchFileList', 'asyncDeleteFile', 'asyncUpdateFile']),
-      // TODO: 这里的goBack也需要迁回
-      ...mapMutations(['goBack']),
+      ...mapActions(['asyncFetchFileList', 'asyncDeleteFile', 'asyncUpdateFile', 'syncCancelRequest', 'asyncDownloadFile']),
+      ...mapMutations(['setBucket']),
+      goBack() {
+        this.$router.go(-1);
+      },
       /* =================== 文件上传 =================== */
       handleBeforeUpload(file) {
-        // TODO: 图片格式正则
-        // const imgReg = /\.(jpe?g|gif|png)/;
-        const isImage = ~file.type.indexOf('image');
+        const imgReg = /jpe?g|gif|png/;
+        const isImage = imgReg.test(file.type);
         const isLt2M = file.size / 1024 / 1024 < 2;
 
         if(!isImage) {
-          this.$message.error(`${file.name}文件格式错误，仅支持 ".png" ".jpg" ".jpeg" ".gif" 的图片文件`);
+          return this.$message.error(`${file.name}文件格式错误，仅支持 ".png" ".jpg" ".jpeg" ".gif" 的图片文件`);
         }
 
         if(!isLt2M) {
-          this.$message.error(`${file.name}太大了，请上传不超过2M的文件`);
+          return this.$message.error(`${file.name}太大了，请上传不超过2M的文件`);
         }
-
-        // console.log(file, isImage && isLt2M);
-        // console.log('Upload is image: %s', isImage);
-        // console.log('Upload is in limit size: %s', isLt2M);
 
         return !!isImage && isLt2M;
       },
@@ -200,50 +153,52 @@
       /* =================== 操作按钮 =================== */
       // 文件删除
       handleDeleteFile(item) {
-        // TODO: 接口返回缺少ID
-        this.$msgbox.confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        this.$msgbox({
           type: 'warning',
-        })
-          .then(() => {
-            this.asyncDeleteFile({id: item.id })
-              .then(() => {
-                setTimeout(() => {
-                  this.getCurrPageData();
+          title: '提示',
+          message: '此操作将永久删除该文件, 是否继续?',
+          showCancelButton: true,
+          beforeClose: (action, instance, done) => {
+            if(action === 'confirm') {
+              instance.confirmButtonLoading = true;
+              instance.confirmButtonText = '删除中...';
+              
+              this.asyncDeleteFile({id: item.id })
+                .then(() => {
+                  done();
+                  instance.confirmButtonLoading = false;
                   this.$message({
                     type: 'success',
                     message: '删除成功',
                   });
-                }, 300);
-              });
-          })
-          .catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消删除',
-            });
-          });
-        // 
+                  setTimeout(() => {
+                    this.getCurrPageData();
+                  }, DELAY);
+                })
+                .catch(() => {
+                  instance.confirmButtonLoading = false;
+                  done();
+                })
+            }
+            if(action === 'cancel') {
+              instance.confirmButtonLoading = false;
+              done();
+              this.syncCancelRequest();
+            }
+          },
+        })
       },
       // 文件预览 + 编辑文件信息
       handleEditFile(item) {
         this.dialogVisible = true;
         this.editForm.name = item.name;
         this.currentItem = item;
-        // this.asyncGetFielDetail({ id: item.id });
       },
       // 文件下载
       handleDownloadFile(item) {
-        // TODO: 文件下载完善
-        const aTag = document.createElement('a');
-        // request.get(this.previewUrl + item.name, {
-        //   responseType: 'arraybuffer'
-        // })
-        //   .then(data => {
-        //     console.error(data)
-        //   })
-        // aTag.download = 'logo.png';
-        // aTag.href = this.previewUrl + item.name;
-        // aTag.click();
+        const name = item.name;
+
+        this.asyncDownloadFile({ name }).then(data => download(name, data));
       },
       // 翻页
       handlePageChange(page) {
@@ -254,18 +209,15 @@
         this.$refs.editForm.validate((valid) => {
           if(valid) {
             // console.log(this.editForm);
-            this.dialogVisible = false;
-
             const body = {
               name: this.editForm.name,
               id: this.currentItem.id,
             };
+
+            this.handleCancelDialog();
             
             this.asyncUpdateFile(body)
-              .then(() => {
-                console.warn('ok');
-                // this.handleCancelDialog();
-              });
+              .then(() => this.getCurrPageData());
           }
         })
       },
@@ -275,17 +227,64 @@
       },
       // 获取列表
       getCurrPageData() {
-        return this.asyncFetchFileList({bucket: this.name,page: this.page,size: this.size });
+        return this.asyncFetchFileList({
+          bucket: this.name,
+          page: this.page,
+          size: this.size,
+        });
       },
     },
     computed: mapGetters(['name', 'files']),
     mounted() {
+      this.setBucket({ bucket: this.$route.params.bucket });
       this.getCurrPageData();
     }
   }
 </script>
 <style scoped>
-  
-
+  .el-card{
+    margin-bottom: 20px;
+  }
+  .el-dropdown {
+    float: right;
+    color: #409eff;
+    cursor: pointer;
+  }
+  .layout-header{
+    margin-bottom: 15px;
+  }
+  .layout-list{
+    padding: 15px 7px;
+    margin-bottom: 15px;
+    height: 656px;
+    border: 1px solid #eee;
+  }
+  .thumbnail{
+    display: block;
+    margin: auto;
+    width: 100%;
+    max-width: 200px;
+  }
+  .title{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .content{
+    padding-top: 14px;
+  }
+  .bottom {
+    margin-top: 13px;
+  }
+  .time {
+    font-size: 13px;
+    color: #999;
+  }
+  .pagination{
+    float: right;
+  }
+  .btns{
+    float: right;
+  }
 </style>
 
