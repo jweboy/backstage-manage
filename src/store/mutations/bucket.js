@@ -6,14 +6,15 @@ export default {
     state.isFetching = true;
   },
   [FETCH_SUCCESS](state, action) {
-    const { type } = action;
     state.isFetching = false;
-    state[type] = action[type];
+    if(action != null) {
+      const { type } = action;
+      state[type] =  action[type];
+    }
     state.lastUpdated = new Date().getTime();
   },
   [FETCH_FAILURE](state, action) {
     state.isFetching = false;
-    state.error = action.error;
   },
   onClick(state, action) {
     const { name } = action;

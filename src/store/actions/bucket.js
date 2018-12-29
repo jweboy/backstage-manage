@@ -1,5 +1,5 @@
-import { FETCH_REQUEST, FETCH_SUCCESS, FETCH_FAILURE } from "../contants/types";
-import { request } from '../../plugins/axios';
+import { FETCH_REQUEST, FETCH_SUCCESS } from "../contants/types";
+import { request, CancelToken } from '../../plugins/axios';
 
 // TODO: 这里需要优化到函数里
 const payload = { 
@@ -7,64 +7,54 @@ const payload = {
   files: { data: [] }, 
 };
 
+let cancelRequest = null;
+
 // TODO: request包装成一个公用的
 export default {
   asyncFetchBucketList({ commit }) {
     commit(FETCH_REQUEST);
 
-    request.get("/qiniu/bucket")
-      .then(data => {
-        commit(FETCH_SUCCESS, { type: 'data', data });
-      })
-      .catch(err => {
-        commit(FETCH_FAILURE, { error: err });
-      });
+    return request.get("/qiniu/bucket").then(data => commit(FETCH_SUCCESS, { type: 'data', data }));
   },
   asyncFetchFileList({ commit }, params) {
-    
     commit(FETCH_REQUEST, payload);
 
     return request.get("/qiniu/file", { params })
       .then(res => {
         payload.files.data = res.data;
         payload.files.total = res.total;
-        commit(FETCH_SUCCESS, payload)
-      })
-      .catch(err => {
-        commit(FETCH_FAILURE, { error: err })
-      })
+        commit(FETCH_SUCCESS, payload);
+      });
   },
   asyncDeleteFile({ commit }, params) {
-    commit(FETCH_REQUEST)
+    commit(FETCH_REQUEST);
 
-    return request.delete('/qiniu/file', { params })
-      .then(data => {
-        commit(FETCH_SUCCESS, data)
+    // TODO: 提取一个公共函数处理URL
+    return request.delete(`/qiniu/file?id=${params.id}`, { 
+      _loading: false,
+      cancelToken: new CancelToken(cancel => {
+        cancelRequest = cancel;
       })
-      .catch(err => {
-        commit(FETCH_FAILURE, { error: err })
-      })
+     })
+      .then(data => commit(FETCH_SUCCESS, data))
+      .catch(err => Promise.reject(err));
+  },
+  syncCancelRequest() {
+    return cancelRequest('请求被中断');
   },
   asyncGetFielDetail({ commit }, params) {
-    commit(FETCH_REQUEST)
+    commit(FETCH_REQUEST);
 
-    request.get('/qiniu/file/detail', { params })
-      .then(data => {
-        commit(FETCH_SUCCESS, data)
-      })
-      .catch(err => {
-        commit(FETCH_FAILURE, { error: err })
-      })
+    return request.get('/qiniu/file/detail', { params })
+      .then(data => commit(FETCH_SUCCESS, data));
   },
   asyncUpdateFile({ commit }, data) {
-    commit(FETCH_REQUEST)
+    commit(FETCH_REQUEST);
 
-    return request.put('/qiniu/file/edit', data, { _useForm: true })
-      .then(data => {
-        commit(FETCH_SUCCESS, data)
-      })
-      .catch(err => {
-        commit(FETCH_FAILURE, { error: err })
-      })
+    return request.put('/qiniu/file/edit', data, { 
+      _useForm: true, 
+      _loading: false,
+    })
+      .then(data => commit(FETCH_SUCCESS, data));
   }
 };

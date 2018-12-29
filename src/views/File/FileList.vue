@@ -153,7 +153,7 @@
         imgName: '',
         // TODO: 这里需要根据不同的bucket来区分
         previewUrl: 'http://pk9xplija.bkt.clouddn.com/',
-        uploadUrl: 'http://118.24.155.105:4000/v1/qiniu/file?bucket=',
+        uploadUrl: 'http://118.24.155.105:4000/api/v1/qiniu/file?bucket=',
         currentDate: new Date().toLocaleDateString(),
         dialogVisible: false,
         editForm: {
@@ -164,7 +164,7 @@
       }
     },
     methods: {
-      ...mapActions(['asyncFetchFileList', 'asyncDeleteFile', 'asyncUpdateFile']),
+      ...mapActions(['asyncFetchFileList', 'asyncDeleteFile', 'asyncUpdateFile', 'syncCancelRequest']),
       // TODO: 这里的goBack也需要迁回
       ...mapMutations(['goBack']),
       /* =================== 文件上传 =================== */
@@ -200,29 +200,41 @@
       /* =================== 操作按钮 =================== */
       // 文件删除
       handleDeleteFile(item) {
-        // TODO: 接口返回缺少ID
-        this.$msgbox.confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        this.$msgbox({
           type: 'warning',
-        })
-          .then(() => {
-            this.asyncDeleteFile({id: item.id })
-              .then(() => {
-                setTimeout(() => {
-                  this.getCurrPageData();
+          title: '提示',
+          message: '此操作将永久删除该文件, 是否继续?',
+          showCancelButton: true,
+          beforeClose: (action, instance, done) => {
+            // TODO: 删除不要loading
+            if(action === 'confirm') {
+              instance.confirmButtonLoading = true;
+              instance.confirmButtonText = '执行中...';
+              
+              this.asyncDeleteFile({id: item.id })
+                .then(() => {
+                  done();
+                  instance.confirmButtonLoading = false;
                   this.$message({
                     type: 'success',
                     message: '删除成功',
                   });
-                }, 300);
-              });
-          })
-          .catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消删除',
-            });
-          });
-        // 
+                  setTimeout(() => {
+                    this.getCurrPageData();
+                  }, 300);
+                })
+                .catch(() => {
+                  instance.confirmButtonLoading = false;
+                  done();
+                })
+            }
+            if(action === 'cancel') {
+              instance.confirmButtonLoading = false;
+              done();
+              this.syncCancelRequest();
+            }
+          },
+        })
       },
       // 文件预览 + 编辑文件信息
       handleEditFile(item) {
@@ -254,17 +266,16 @@
         this.$refs.editForm.validate((valid) => {
           if(valid) {
             // console.log(this.editForm);
-            this.dialogVisible = false;
-
             const body = {
               name: this.editForm.name,
               id: this.currentItem.id,
             };
             
+            this.handleCancelDialog();
+            
             this.asyncUpdateFile(body)
               .then(() => {
-                console.warn('ok');
-                // this.handleCancelDialog();
+                this.getCurrPageData();
               });
           }
         })
