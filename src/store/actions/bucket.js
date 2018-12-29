@@ -56,5 +56,11 @@ export default {
       _loading: false,
     })
       .then(data => commit(FETCH_SUCCESS, data));
-  }
+  },
+  asyncDownloadFile(_, params) {
+    return request.get(`http://pkhleymnc.bkt.clouddn.com/${params.name}`, {
+      responseType: 'blob',
+      _loading: false,
+    });
+  },
 };

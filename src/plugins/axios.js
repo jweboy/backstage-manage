@@ -70,8 +70,16 @@ Axios.interceptors.response.use(
 
     // TODO: 特定定义 比如我请求文件资源 下面的判断就不适用需要优化
     // TODO: response错误码的判断
-    if (!!res.data && res.data.code === 0) {
-      return res.data.data
+    if (!!res.data) {
+      // 常规请求
+      if(res.data.code === 0) {
+        return res.data.data;
+      }
+
+      // 请求服务器直接下载文件
+      if(res.config.responseType === 'blob') {
+        return res.data;
+      }
     } else {
       const msg = res.data ? res.data.message : '';
 

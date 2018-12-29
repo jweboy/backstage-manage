@@ -142,7 +142,7 @@
 </template>
 <script>
   import { mapMutations, mapActions, mapGetters } from "vuex";
-  import { request } from '../../plugins/axios';
+  import { download } from '../../util';
   export default {
     data() {
       return {
@@ -152,7 +152,7 @@
         visible: false,
         imgName: '',
         // TODO: 这里需要根据不同的bucket来区分
-        previewUrl: 'http://pk9xplija.bkt.clouddn.com/',
+        previewUrl: 'http://pkhleymnc.bkt.clouddn.com/',
         uploadUrl: 'http://118.24.155.105:4000/api/v1/qiniu/file?bucket=',
         currentDate: new Date().toLocaleDateString(),
         dialogVisible: false,
@@ -164,7 +164,7 @@
       }
     },
     methods: {
-      ...mapActions(['asyncFetchFileList', 'asyncDeleteFile', 'asyncUpdateFile', 'syncCancelRequest']),
+      ...mapActions(['asyncFetchFileList', 'asyncDeleteFile', 'asyncUpdateFile', 'syncCancelRequest', 'asyncDownloadFile']),
       // TODO: 这里的goBack也需要迁回
       ...mapMutations(['goBack', 'setBucket']),
       /* =================== 文件上传 =================== */
@@ -245,17 +245,9 @@
       },
       // 文件下载
       handleDownloadFile(item) {
-        // TODO: 文件下载完善
-        const aTag = document.createElement('a');
-        // request.get(this.previewUrl + item.name, {
-        //   responseType: 'arraybuffer'
-        // })
-        //   .then(data => {
-        //     console.error(data)
-        //   })
-        // aTag.download = 'logo.png';
-        // aTag.href = this.previewUrl + item.name;
-        // aTag.click();
+        const name = item.name;
+        
+        this.asyncDownloadFile({ name }).then(data => download(name, data));
       },
       // 翻页
       handlePageChange(page) {
