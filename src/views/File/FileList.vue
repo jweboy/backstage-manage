@@ -21,7 +21,7 @@
     </header>
     <div class="layout-content">
       <el-row :gutter="16" class="layout-list">
-        <el-col v-for="(item, index) in files.data" :span="8" :key="index">
+        <el-col v-for="(item, index) in files.data" :span="6" :key="index">
           <el-card>
             <img class="thumbnail" :src="previewUrl + item.name" />
             <div class="content">
@@ -32,7 +32,7 @@
                 </el-tooltip> -->
               </div>
               <div class="bottom">
-                <span class="time">{{item.createTime}}</span>
+                <span class="time">{{item.create_time}}</span>
                 <span class="btns">
                   <el-button 
                     @click.stop="handleDownloadFile(item)"
@@ -77,14 +77,14 @@
         <el-form-item label="名称" prop="name">
           <el-input type="name" v-model="editForm.name" placeholder="请输入名称" />
         </el-form-item>
-        <!-- <el-form-item label="类型" prop="type">
-          <el-radio-group v-model="editForm.type">
-            <el-radio label=".png" type="type"></el-radio>
-            <el-radio label=".jpg" type="type"></el-radio>
-            <el-radio label=".jepg" type="type"></el-radio>
-            <el-radio label=".gif" type="type"></el-radio>
+        <el-form-item label="类型" prop="type">
+          <el-radio-group v-model="editForm.type"  @change="handleMimeTypeChange">
+            <el-radio label="png"></el-radio>
+            <el-radio label="jpg"></el-radio>
+            <el-radio label="jpeg"></el-radio>
+            <el-radio label="gif"></el-radio>
           </el-radio-group>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleSubmit">确定</el-button>
           <el-button @click="handleCancelDialog">取消</el-button>
@@ -108,19 +108,19 @@
         visible: false,
         imgName: '',
         // TODO: 这里需要根据不同的bucket来区分
-        previewUrl: 'http://pkhleymnc.bkt.clouddn.com/',
+        previewUrl: 'http://pkoncwilh.bkt.clouddn.com/',
         uploadUrl: 'http://118.24.155.105:4000/api/v1/qiniu/file?bucket=',
         currentDate: new Date().toLocaleDateString(),
         dialogVisible: false,
         editForm: {
           name: '',
-          type: 0,
+          type: '.png',
         },
         currentItem: {},
       }
     },
     methods: {
-      ...mapActions(['asyncFetchFileList', 'asyncDeleteFile', 'asyncUpdateFile', 'syncCancelRequest', 'asyncDownloadFile']),
+      ...mapActions(['asyncFetchFileList', 'asyncDeleteFile', 'asyncUpdateFile', 'syncCancelRequest', 'asyncDownloadFile', 'asyncUpdateMimeType']),
       ...mapMutations(['setBucket']),
       goBack() {
         this.$router.go(-1);
@@ -190,9 +190,20 @@
       },
       // 文件预览 + 编辑文件信息
       handleEditFile(item) {
+        const { mime_type, name } = item;
+
         this.dialogVisible = true;
-        this.editForm.name = item.name;
         this.currentItem = item;
+        this.editForm.name = name;
+        this.editForm.type = mime_type ? mime_type.split('/')[1] : '';
+      },
+      async handleMimeTypeChange(value) {
+        const currentID = this.currentItem.id;
+        const currentType = 'image/' + value;
+
+        await this.asyncUpdateMimeType({ id: currentID, type: currentType });
+        await this.getCurrPageData();
+        
       },
       // 文件下载
       handleDownloadFile(item) {
@@ -208,7 +219,7 @@
       handleSubmit(item) {
         this.$refs.editForm.validate((valid) => {
           if(valid) {
-            // console.log(this.editForm);
+            console.log(this.editForm.type);
             const body = {
               name: this.editForm.name,
               id: this.currentItem.id,

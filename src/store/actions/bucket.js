@@ -49,7 +49,13 @@ export default {
     return request.put('/qiniu/file/edit', data, { 
       _useForm: true, 
       _loading: false,
-    })
+    });
+  },
+  asyncUpdateMimeType(_, data) {
+    return request.put('/qiniu/file/changeMime', data, {
+      _useForm: true, 
+      _loading: false,
+    });
   },
   asyncDownloadFile(_, params) {
     return request.get(`http://pkhleymnc.bkt.clouddn.com/${params.name}`, {
