@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-import iView from 'iview';
+import iView from "iview";
 
 Vue.use(Router);
 
@@ -16,21 +16,23 @@ const router = new Router({
       redirect: "/file", // 默认展示文件列表页面
       children: [
         {
-          path: '/file',
+          path: "/file",
           name: "镜像空间",
-          component: () => import(/* webpackChunkName: "bucketList" */ "@/views/File"),
+          component: () =>
+            import(/* webpackChunkName: "bucketList" */ "@/views/File")
         },
         {
-          path: '/file/:bucket',
+          path: "/file/:bucket",
           name: "文件列表",
-          component: () => import(/* webpackChunkName: "fileList" */ "@/views/File/FileList"),
+          component: () =>
+            import(/* webpackChunkName: "fileList" */ "@/views/File/FileList")
         },
         {
           path: "test",
           name: "test",
           component: () =>
             import(/* webpackChunkName: "about" */ "@/views/About.vue")
-        },
+        }
       ]
     },
     {
@@ -57,7 +59,7 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
-router.afterEach(route => {
+router.afterEach(() => {
   iView.LoadingBar.finish();
 });
 

@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Router from "vue-router";
-import iView from "iview";
 
 Vue.use(Router);
 
@@ -38,15 +37,6 @@ const router = new Router({
     //   component: () => import(/* webpackChunkName: "storage" */ './views/FileStorage.vue'),
     // },
   ]
-});
-
-// global loading
-router.beforeEach((to, from, next) => {
-  iView.LoadingBar.start();
-  next();
-});
-router.afterEach(route => {
-  iView.LoadingBar.finish();
 });
 
 export default router;

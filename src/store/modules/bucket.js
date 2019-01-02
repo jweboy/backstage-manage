@@ -6,11 +6,11 @@ export const bucket = {
   state: {
     isFetching: false,
     data: [],
-    name: '',
+    name: "",
     files: {
       data: [],
-      total: 0,
-    },
+      total: 0
+    }
   },
   actions,
   getters,

@@ -16,28 +16,26 @@
   margin: 0 auto;
   margin-right: 0;
 }
-  .element-menu{
-    display: flex;
-    justify-content: flex-end;
-  }
-  .el-main{
-    height: calc(100vh - 60px);
-    overflow-y: scroll;
-  }
+.element-menu {
+  display: flex;
+  justify-content: flex-end;
+}
+.el-main {
+  height: calc(100vh - 60px);
+  overflow-y: scroll;
+}
 </style>
 <template>
   <el-container>
     <el-header>
       <el-menu mode="horizontal" :router="true">
-          <el-menu-item v-for="item in menu" :index="item.key">
-            <span>{{ item.name }}</span>
-          </el-menu-item>
-        </el-menu>
+        <el-menu-item v-for="item in menu" :index="item.key" :key="item.key">
+          <span>{{ item.name }}</span>
+        </el-menu-item>
+      </el-menu>
     </el-header>
     <el-container>
-      <el-aside width="200px">
-        <LeftMenu />
-      </el-aside>
+      <el-aside width="200px"> <LeftMenu /> </el-aside>
       <el-main>
         <!-- <Breadcrumb /> -->
         <router-view />
@@ -46,7 +44,7 @@
   </el-container>
 </template>
 <script>
-import { LeftMenu, Breadcrumb } from "@/components";
+import { LeftMenu } from "@/components";
 export default {
   data() {
     return {
@@ -59,11 +57,11 @@ export default {
         {
           name: "退出登录",
           icon: "ios-navigate",
-          key: "/login",
+          key: "/login"
         }
       ]
     };
   },
-  components: { LeftMenu, Breadcrumb }
+  components: { LeftMenu }
 };
 </script>

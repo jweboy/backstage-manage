@@ -5,15 +5,14 @@
 .title {
   margin-left: 5px;
 }
-  .el-menu{
-    height:calc(100vh - 60px);
-  }
+.el-menu {
+  height: calc(100vh - 60px);
+}
 </style>
 <template>
   <el-menu default-active="/file" :router="true">
-    <el-menu-item v-for="item in menu" :index="item.key">
-      <i :class="item.icon"></i>
-      <span class="title">{{ item.name }}</span>
+    <el-menu-item v-for="item in menu" :index="item.key" :key="item.key">
+      <i :class="item.icon"></i> <span class="title">{{ item.name }}</span>
     </el-menu-item>
   </el-menu>
 </template>

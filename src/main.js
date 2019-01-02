@@ -4,7 +4,7 @@ import router from "./router";
 import store from "./store";
 import "./registerServiceWorker";
 import "./plugins/element";
-import axios from './plugins/axios';
+import axios from "./plugins/axios";
 
 Vue.config.productionTip = false;
 Vue.use(axios);
